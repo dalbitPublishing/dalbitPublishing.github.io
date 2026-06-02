@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>달빛출판사 - 회사소개</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f4f4f4; }
+
+  /* ── 관리자 상단 툴바 ── */
+  .admin-topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 36px;
+    background: #fff; border-bottom: 1px solid #ddd;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; z-index: 1000; font-size: 13px; color: #333;
+  }
+  .admin-topbar .left { display: flex; align-items: center; gap: 8px; }
+  .admin-topbar .center { display: flex; align-items: center; gap: 10px; }
+  .admin-topbar .right { display: flex; align-items: center; gap: 8px; }
+  .admin-topbar .icon-btn {
+    width: 28px; height: 28px; border: none; background: none;
+    cursor: pointer; border-radius: 4px; display: flex; align-items: center;
+    justify-content: center; color: #555; font-size: 15px;
+  }
+  .admin-topbar .icon-btn:hover { background: #f0f0f0; }
+  .admin-topbar .page-title {
+    font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 4px;
+  }
+  .admin-topbar .device-btn {
+    border: 1px solid #ddd; border-radius: 4px; padding: 3px 8px;
+    background: #fff; cursor: pointer; font-size: 12px; color: #555;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .admin-topbar .publish-btn {
+    background: #333; color: #fff; border: none; border-radius: 4px;
+    padding: 5px 12px; font-size: 12px; cursor: pointer;
+  }
+  .admin-topbar .exit-btn {
+    background: #fff; color: #333; border: 1px solid #ccc; border-radius: 4px;
+    padding: 5px 12px; font-size: 12px; cursor: pointer;
+  }
+  .admin-topbar .header-edit-btn {
+    position: fixed; top: 0; right: 0; height: 36px;
+    background: #fff; border-left: 1px solid #ddd;
+    padding: 0 16px; display: flex; align-items: center;
+    font-size: 12px; color: #555; cursor: pointer;
+  }
+
+  /* ── 두 번째 툴바 줄 (Home, +, 디바이스) ── */
+  .admin-subbar {
+    position: fixed; top: 36px; left: 0; right: 0; height: 32px;
+    background: #fff; border-bottom: 1px solid #e8e8e8;
+    display: flex; align-items: center; padding: 0 12px; gap: 12px;
+    z-index: 999; font-size: 12px; color: #555;
+  }
+  .admin-subbar .add-btn {
+    width: 22px; height: 22px; border: 1px solid #ccc; border-radius: 3px;
+    background: #fff; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; color: #555;
+  }
+  .admin-subbar .home-link { color: #555; text-decoration: none; }
+  .admin-subbar .device-toggle {
+    margin-left: auto; display: flex; align-items: center; gap: 4px;
+    border: 1px solid #ddd; border-radius: 4px; padding: 2px 8px;
+    font-size: 12px; cursor: pointer; color: #555;
+  }
+
+  /* ── 좌측 메뉴 바 (아이콘 세로 줄) ── */
+  .admin-sidebar-icons {
+    position: fixed; top: 68px; left: 0; width: 22px; bottom: 0;
+    background: #fff; border-right: 1px solid #e8e8e8;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 10px; gap: 14px; z-index: 998;
+  }
+  .admin-sidebar-icons .s-icon {
+    width: 16px; height: 16px; cursor: pointer; color: #888; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── 메인 레이아웃 ── */
+  .editor-wrapper {
+    margin-top: 68px;
+    margin-left: 22px;
+    min-height: calc(100vh - 68px);
+    background: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 점선 편집 영역 테두리 */
+  .site-preview {
+    margin: 8px auto;
+    width: 100%;
+    max-width: 1500px;
+    background: #fff;
+    position: relative;
+    border: 1.5px dashed #b0c4de;
+  }
+
+  /* ── 실제 웹사이트 레이아웃 ── */
+  .site-layout {
+    display: flex;
+    min-height: 380px;
+  }
+
+  /* 좌측 사이드바 (웹사이트의 메인 내비게이션) */
+  .site-sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: #fff;
+    border-right: 1px solid #eee;
+    padding: 32px 40px 40px 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 로고 */
+  .site-logo {
+    margin-bottom: 40px;
+    display: block;
+  }
+  .logo-wrap {
+    display: flex; align-items: flex-end; gap: 0;
+  }
+  .logo-char {
+    font-size: 52px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px;
+    font-family: 'Black Han Sans', 'Apple SD Gothic Neo', sans-serif;
+  }
+  .logo-da { color: #f5c800; }
+  .logo-l  { color: #111; }
+  .logo-bit { color: #111; }
+  /* 달빛 로고 블록형 재현 */
+  .logo-block {
+    display: inline-block; background: #f5c800;
+    color: #111; font-size: 42px; font-weight: 900;
+    padding: 4px 6px 2px 6px; line-height: 1;
+    font-family: 'Black Han Sans', 'Apple SD Gothic Neo', sans-serif;
+  }
+  .logo-block2 {
+    display: inline-block; background: #111;
+    color: #fff; font-size: 42px; font-weight: 900;
+    padding: 4px 6px 2px 6px; line-height: 1;
+    font-family: 'Black Han Sans', 'Apple SD Gothic Neo', sans-serif;
+    margin-left: 2px;
+  }
+
+  /* 네비게이션 */
+  .site-nav { flex: 1; }
+  .site-nav ul { list-style: none; }
+  .site-nav > ul > li { margin-bottom: 6px; }
+  .site-nav a {
+    text-decoration: none; color: #222; font-size: 15px;
+    display: block; padding: 4px 0;
+  }
+  .site-nav a:hover { color: #888; }
+  .site-nav .active-menu { font-weight: 700; font-size: 17px; color: #111; }
+  .site-nav .sub-menu { padding-left: 16px; margin-top: 2px; }
+  .site-nav .sub-menu li { margin-bottom: 2px; }
+  .site-nav .sub-menu a { font-size: 13px; color: #666; }
+  .site-nav .divider {
+    border: none; border-top: 1px solid #e0e0e0;
+    margin: 18px 0;
+  }
+
+  /* SNS 아이콘 */
+  .site-sns {
+    display: flex; gap: 12px; margin-top: 16px;
+  }
+  .site-sns a {
+    color: #555; font-size: 18px; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .site-sns a:hover { color: #111; }
+  .sns-icon {
+    width: 20px; height: 20px; display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+
+  /* 메인 콘텐츠 영역 */
+  .site-main {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0;
+  }
+
+  /* 코드 위젯 플레이스홀더 */
+  .code-placeholder {
+    width: 100%; height: 80px;
+    background: #f0f0f0; border: 1px dashed #ccc;
+    display: flex; align-items: center; justify-content: center;
+    color: #aaa; font-size: 20px; letter-spacing: 1px;
+    margin: 0;
+  }
+
+  /* ── 하단 푸터 ── */
+  .site-footer {
+    background: #222; color: #aaa;
+    padding: 30px 20px 24px 20px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .site-footer .footer-nav {
+    display: flex; justify-content: center; gap: 24px;
+    margin-bottom: 18px; list-style: none;
+  }
+  .site-footer .footer-nav a {
+    color: #ccc; text-decoration: none; font-size: 13px;
+  }
+  .site-footer .footer-nav a:hover { color: #fff; }
+  .site-footer .footer-info { margin-bottom: 6px; font-size: 12px; color: #888; }
+  .site-footer .footer-copyright { font-size: 11px; color: #666; }
+
+  /* imweb 워터마크 */
+  .imweb-watermark {
+    text-align: center; padding: 8px; background: #e8e8e8;
+    font-size: 11px; color: #aaa;
+  }
+
+  /* 편집 테두리 점선 오버레이 */
+  .edit-border-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    border-top: 2px dashed #b0c4de; pointer-events: none;
+  }
+  .edit-border-side {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 4px;
+    border-left: 2px dashed #b0c4de; pointer-events: none;
+  }
+
+  /* 섹션 확장 핸들 */
+  .section-handle {
+    position: absolute; top: 8px; right: 8px;
+    width: 18px; height: 18px; background: #fff;
+    border: 1px solid #ccc; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #888; cursor: pointer;
+  }
+</style>
+<!-- SVG 아이콘용 -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-menu" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="icon-undo" viewBox="0 0 24 24"><path d="M3 10h10a7 7 0 0 1 0 14H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><polyline points="7 6 3 10 7 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="icon-redo" viewBox="0 0 24 24"><path d="M21 10H11a7 7 0 0 0 0 14h10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><polyline points="17 6 21 10 17 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="icon-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2" fill="none"/></symbol>
+  <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><polyline points="2,4 12,13 22,4" stroke="currentColor" stroke-width="2" fill="none"/></symbol>
+  <symbol id="icon-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="icon-twitter" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.88 1.1A4.52 4.52 0 0 0 16.11 0c-2.5 0-4.52 2.03-4.52 4.52 0 .35.04.7.11 1.03A12.84 12.84 0 0 1 2.17.83a4.52 4.52 0 0 0 1.4 6.03A4.48 4.48 0 0 1 1.52 6v.06a4.52 4.52 0 0 0 3.63 4.43 4.53 4.53 0 0 1-2.04.08 4.52 4.52 0 0 0 4.22 3.14A9.07 9.07 0 0 1 1 19.54a12.82 12.82 0 0 0 6.95 2.03c8.34 0 12.9-6.91 12.9-12.9l-.01-.59A9.21 9.21 0 0 0 23 3z" fill="currentColor"/></symbol>
+</svg>
+</head>
+<body>
+
+<!-- ── 관리자 상단 툴바 ── -->
+<div class="admin-topbar">
+  <div class="left">
+    <button class="icon-btn">
+      <svg width="16" height="16"><use href="#icon-menu"/></svg>
+    </button>
+    <button class="icon-btn">
+      <svg width="14" height="14"><use href="#icon-undo"/></svg>
+    </button>
+    <button class="icon-btn">
+      <svg width="14" height="14"><use href="#icon-redo"/></svg>
+    </button>
+  </div>
+  <div class="center">
+    <span class="page-title">
+      회사소개
+      <svg width="13" height="13"><use href="#icon-settings"/></svg>
+    </span>
+  </div>
+  <div class="right">
+    <button class="icon-btn" title="히스토리">🕐</button>
+    <button class="icon-btn"><svg width="14" height="14"><use href="#icon-settings"/></svg></button>
+    <button class="icon-btn">↗</button>
+    <button class="publish-btn">게시완료</button>
+    <button class="exit-btn">나가기</button>
+  </div>
+  <div class="header-edit-btn">상단 편집</div>
+</div>
+
+<!-- ── 두 번째 서브바 ── -->
+<div class="admin-subbar">
+  <button class="add-btn">+</button>
+  <a href="#" class="home-link">Home</a>
+  <div class="device-toggle">
+    <svg width="14" height="14"><use href="#icon-monitor"/></svg>
+    ▾
+  </div>
+</div>
+
+<!-- ── 좌측 아이콘 사이드바 ── -->
+<div class="admin-sidebar-icons">
+  <div class="s-icon">≡</div>
+  <div class="s-icon">⊕</div>
+  <div class="s-icon">◧</div>
+</div>
+
+<!-- ── 편집기 본문 ── -->
+<div class="editor-wrapper">
+  <div class="site-preview">
+    <div class="section-handle">⤢</div>
+
+    <!-- 웹사이트 레이아웃 -->
+    <div class="site-layout">
+
+      <!-- 좌측 사이드바 (웹사이트 네비게이션) -->
+      <div class="site-sidebar">
+        <!-- 로고 -->
+        <a href="#" class="site-logo">
+          <span class="logo-block">달</span><span class="logo-block2">빛</span>
+        </a>
+
+        <!-- 메인 네비게이션 -->
+        <nav class="site-nav">
+          <ul>
+            <li><a href="#">회사소개</a></li>
+            <li>
+              <a href="#" class="active-menu">작품소개</a>
+              <ul class="sub-menu">
+                <li><a href="#">취향매칭테스트(GL)</a></li>
+                <li><a href="#">달빛 라이브러리(GL)</a></li>
+              </ul>
+            </li>
+            <li><a href="#">CONTACT</a></li>
+          </ul>
+          <hr class="divider">
+        </nav>
+
+        <!-- SNS 아이콘 -->
+        <div class="site-sns">
+          <a href="#" title="이메일">
+            <svg class="sns-icon" width="18" height="18"><use href="#icon-mail"/></svg>
+          </a>
+          <a href="#" title="인스타그램">
+            <svg class="sns-icon" width="18" height="18"><use href="#icon-instagram"/></svg>
+          </a>
+          <a href="#" title="트위터">
+            <svg class="sns-icon" width="18" height="18"><use href="#icon-twitter"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 메인 콘텐츠 영역 -->
+      <div class="site-main">
+        <div style="width:100%">
+          <div class="code-placeholder">&lt;/&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 사이트 푸터 -->
+    <footer class="site-footer">
+      <ul class="footer-nav">
+        <li><a href="#">회사소개</a></li>
+        <li><a href="#">작품소개</a></li>
+        <li><a href="#">CONTACT</a></li>
+      </ul>
+      <p class="footer-info">달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판</p>
+      <p class="footer-copyright">Copyright ⓒ 2026 달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판 All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- imweb 워터마크 -->
+  <div class="imweb-watermark">ⓘ Imweb Corp.</div>
+</div>
+
+</body>
+</html>
