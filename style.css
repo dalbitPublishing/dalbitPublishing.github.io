@@ -10,9 +10,8 @@ nav{flex:1;}
 nav ul{list-style:none;}
 .nav-item{margin-bottom:4px;}
 .nav-link{display:block;font-size:14px;color:#999;padding:3px 0;text-decoration:none;transition:color .15s;}
-.nav-link:hover{color:#111;}
-.nav-item>.nav-link.active{font-size:17px;font-weight:700;color:#111;}
-.nav-sub .nav-link.active{font-size:13px;font-weight:400;color:#111;}
+.nav-link:hover,.nav-link.active{color:#111;}
+.nav-bold>.nav-link{font-size:17px;font-weight:700;color:#111;}
 .nav-sub{padding-left:14px;margin-top:2px;margin-bottom:4px;}
 .nav-sub .nav-link{font-size:13px;color:#888;}
 .nav-divider{border:none;border-top:1px solid #e8e8e8;margin:18px 0 14px;}
@@ -21,13 +20,10 @@ nav ul{list-style:none;}
 .sns a:hover{color:#111;}
 
 /* ── Main wrap ── */
-.main-wrap{margin-left:280px;flex:1;display:flex;flex-direction:column;min-height:100vh;align-items:center;}
+.main-wrap{margin-left:280px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
 
 /* ── Content (회사소개, CONTACT, 퀴즈 등) ── */
-.content{flex:1;padding:56px 56px 64px;max-width:900px;width:100%;}
-
-/* footer는 항상 전체 너비 */
-footer{width:100%;background:#252525;padding:28px 56px 24px;text-align:center;}
+.content{flex:1;padding:56px 56px 64px;max-width:900px;width:100%;margin:0 auto;}
 
 /* ── 회사소개 ── */
 .intro-card{background:#1d2d44;border-radius:8px;padding:40px 46px;margin-bottom:24px;}
@@ -92,6 +88,7 @@ footer{width:100%;background:#252525;padding:28px 56px 24px;text-align:center;}
 .tugoan-val a{color:#1d2d44;}
 
 /* ── Footer ── */
+footer{background:#252525;padding:28px 56px 24px;text-align:center;}
 .footer-nav{list-style:none;display:flex;justify-content:center;gap:24px;margin-bottom:16px;}
 .footer-nav a{color:#bbb;text-decoration:none;font-size:13px;}
 .footer-nav a:hover{color:#fff;}
@@ -111,9 +108,8 @@ footer{width:100%;background:#252525;padding:28px 56px 24px;text-align:center;}
   .mobile-topbar{display:flex;}
   .sidebar{top:56px;transform:translateX(-100%);}
   .sidebar.open{transform:translateX(0);}
-  .main-wrap{margin-left:0;padding-top:56px;align-items:center;}
+  .main-wrap{margin-left:0;padding-top:56px;}
   .content{padding:32px 20px 48px;}
-  footer{padding:24px 20px 20px!important;}
   .dalbit-outer-container{padding:24px 16px;}
   .dalbit-main-content{padding:0;}
   .swiper-button-prev,.swiper-button-next{opacity:.2!important;}
@@ -126,4 +122,9 @@ footer{width:100%;background:#252525;padding:28px 56px 24px;text-align:center;}
   footer{padding:24px 20px 20px;}
   .footer-nav{gap:16px;}
   .intro-card{padding:28px 24px;}
-  .intro
+  .intro-title{font-size:16px;}
+  .intro-card p{font-size:13px;}
+  .info-card{padding:18px 20px;}
+  .contact-section{padding:20px 20px;}
+  .tugoan-row{flex-direction:column;gap:4px;}
+}
