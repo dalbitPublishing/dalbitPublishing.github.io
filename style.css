@@ -8,22 +8,27 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif
 .logo img{width:150px;height:auto;display:block;}
 nav{flex:1;}
 nav ul{list-style:none;}
-.nav-item{margin-bottom:4px;}
-.nav-link{display:block;font-size:14px;color:#999;padding:3px 0;text-decoration:none;transition:color .15s;}
-.nav-link:hover,.nav-link.active{color:#111;}
-.nav-bold>.nav-link{font-size:17px;font-weight:700;color:#111;}
-.nav-sub{padding-left:14px;margin-top:2px;margin-bottom:4px;}
-.nav-sub .nav-link{font-size:13px;color:#888;}
+.nav-item{margin-bottom:6px;}
+.nav-link{display:block;font-size:22px;color:#212121;padding:4px 0;text-decoration:none;font-weight:400;transition:color .15s;}
+.nav-link:hover{color:#111;font-weight:700;}
+.nav-item>.nav-link.active{color:#c6c6c6;font-weight:400;}
+.nav-sub{padding-left:14px;margin-top:4px;margin-bottom:6px;}
+.nav-sub .nav-link{font-size:18px;color:#212121;}
+.nav-sub .nav-link:hover{color:#111;font-weight:700;}
+.nav-sub .nav-link.active{color:#c6c6c6;font-weight:400;}
 .nav-divider{border:none;border-top:1px solid #e8e8e8;margin:18px 0 14px;}
 .sns{display:flex;gap:14px;align-items:center;}
 .sns a{color:#666;display:inline-flex;transition:color .15s;}
 .sns a:hover{color:#111;}
 
 /* ── Main wrap ── */
-.main-wrap{margin-left:280px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.main-wrap{margin-left:280px;flex:1;display:flex;flex-direction:column;min-height:100vh;align-items:center;}
 
 /* ── Content (회사소개, CONTACT, 퀴즈 등) ── */
-.content{flex:1;padding:56px 56px 64px;max-width:900px;width:100%;margin:0 auto;}
+.content{flex:1;padding:56px 56px 64px;max-width:900px;width:100%;}
+
+/* footer는 항상 전체 너비 */
+footer{width:100%;background:#252525;padding:28px 56px 24px;text-align:center;}
 
 /* ── 회사소개 ── */
 .intro-card{background:#1d2d44;border-radius:8px;padding:40px 46px;margin-bottom:24px;}
@@ -75,6 +80,9 @@ nav ul{list-style:none;}
 .page-placeholder .notice{font-size:13px;color:#aaa;background:#f8f8f8;border-radius:6px;padding:16px 20px;margin-top:20px;text-align:left;}
 
 /* ── CONTACT ── */
+.contact-header{margin-bottom:28px;}
+.contact-header h2{font-size:28px;font-weight:700;color:#111;margin-bottom:8px;}
+.contact-header p{font-size:14px;color:#666;}
 .contact-section{border:1px solid #e8e8e8;border-left:4px solid #f5c800;border-radius:4px;padding:28px 32px;margin-bottom:16px;}
 .contact-section h3{font-size:16px;font-weight:700;color:#111;margin-bottom:14px;}
 .contact-section p{font-size:14px;line-height:1.8;color:#555;margin-bottom:8px;}
@@ -88,7 +96,6 @@ nav ul{list-style:none;}
 .tugoan-val a{color:#1d2d44;}
 
 /* ── Footer ── */
-footer{background:#252525;padding:28px 56px 24px;text-align:center;}
 .footer-nav{list-style:none;display:flex;justify-content:center;gap:24px;margin-bottom:16px;}
 .footer-nav a{color:#bbb;text-decoration:none;font-size:13px;}
 .footer-nav a:hover{color:#fff;}
@@ -108,8 +115,9 @@ footer{background:#252525;padding:28px 56px 24px;text-align:center;}
   .mobile-topbar{display:flex;}
   .sidebar{top:56px;transform:translateX(-100%);}
   .sidebar.open{transform:translateX(0);}
-  .main-wrap{margin-left:0;padding-top:56px;}
+  .main-wrap{margin-left:0;padding-top:56px;align-items:center;}
   .content{padding:32px 20px 48px;}
+  footer{padding:24px 20px 20px!important;}
   .dalbit-outer-container{padding:24px 16px;}
   .dalbit-main-content{padding:0;}
   .swiper-button-prev,.swiper-button-next{opacity:.2!important;}
@@ -122,9 +130,6 @@ footer{background:#252525;padding:28px 56px 24px;text-align:center;}
   footer{padding:24px 20px 20px;}
   .footer-nav{gap:16px;}
   .intro-card{padding:28px 24px;}
-  .intro-title{font-size:16px;}
-  .intro-card p{font-size:13px;}
-  .info-card{padding:18px 20px;}
-  .contact-section{padding:20px 20px;}
-  .tugoan-row{flex-direction:column;gap:4px;}
+  .nav-link{font-size:18px;}
+  .nav-sub .nav-link{font-size:15px;}
 }

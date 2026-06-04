@@ -8,14 +8,14 @@ function renderSidebar(activePage) {
   };
   document.getElementById('sidebar').innerHTML = `
     <a href="${pages.about}" class="logo">
-      <img src="https://cdn.imweb.me/thumbnail/20260513/1f3f41f7e3698.png" alt="달빛출판사">
+      <img src="logo.png" alt="달빛출판사" onerror="this.src='https://cdn.imweb.me/thumbnail/20260513/1f3f41f7e3698.png'">
     </a>
     <nav id="sidebar-nav">
       <ul>
         <li class="nav-item">
           <a href="${pages.about}" class="nav-link${activePage==='about'?' active':''}">회사소개</a>
         </li>
-        <li class="nav-item nav-bold">
+        <li class="nav-item">
           <a href="${pages.works}" class="nav-link${['works','quiz','library'].includes(activePage)?' active':''}">작품소개</a>
           <ul class="nav-sub">
             <li class="nav-item"><a href="${pages.quiz}"    class="nav-link${activePage==='quiz'?' active':''}">취향매칭테스트(GL)</a></li>
@@ -48,7 +48,7 @@ function renderSidebar(activePage) {
     topbar.className = 'mobile-topbar';
     topbar.innerHTML = `
       <a href="${pages.about}">
-        <img src="https://cdn.imweb.me/thumbnail/20260513/1f3f41f7e3698.png" alt="달빛출판사">
+        <img src="logo.png" alt="달빛출판사" onerror="this.src='https://cdn.imweb.me/thumbnail/20260513/1f3f41f7e3698.png'">
       </a>
       <button class="hamburger" id="hamburger-btn" aria-label="메뉴">
         <span></span><span></span><span></span>
