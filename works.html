@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>작품소개 | 달빛출판사</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-wrap">
+  <div class="dalbit-outer-container">
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="dalbit-main-content">
+      <div class="swiper dalbitSwiper">
+        <div class="swiper-wrapper" id="work-render-target"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <ul class="footer-nav">
+      <li><a href="index.html">회사소개</a></li>
+      <li><a href="works.html">작품소개</a></li>
+      <li><a href="contact.html">CONTACT</a></li>
+    </ul>
+    <p class="footer-info">달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판</p>
+    <p class="footer-copy">Copyright ⓒ 2026 달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판 All rights reserved.</p>
+  </footer>
+</div>
+<script src="sidebar.js"></script>
+<script src="works-data.js"></script>
+<script>
+renderSidebar('works');
+
+const pInfo = [
+  {id:'aladin',n:'알라딘'},{id:'ridi',n:'리디'},{id:'series',n:'시리즈'},
+  {id:'kakao',n:'카카오'},{id:'kyobo',n:'교보'},{id:'yes24',n:'YES24'},
+  {id:'bomtoon',n:'봄툰'},{id:'bookcube',n:'북큐브'},{id:'joara',n:'조아라'}
+];
+
+const target = document.getElementById('work-render-target');
+worksData.forEach(work => {
+  const btnHtml = pInfo.map(p =>
+    work.links[p.id] ? `<a href="${work.links[p.id]}" target="_blank" class="p-btn ${p.id}">${p.n}</a>` : ''
+  ).join('');
+  const imgHtml = work.poster
+    ? `<img src="${work.poster}" class="work-poster" onerror="this.style.display='none'">`
+    : `<div class="work-poster-placeholder">이미지 준비중</div>`;
+  const kwHtml = work.keywords ? `<div class="work-keywords">${work.keywords}</div>` : '';
+  target.innerHTML += `
+    <div class="swiper-slide">
+      <div class="slide-content">
+        ${imgHtml}
+        <div class="work-info">
+          <div class="work-title">${work.title}</div>
+          <div class="work-synopsis">${work.synopsis}</div>
+          ${kwHtml}
+          <div class="platform-wrap">${btnHtml}</div>
+        </div>
+      </div>
+    </div>`;
+});
+
+new Swiper(".dalbitSwiper", {
+  slidesPerView: 1, spaceBetween: 100, loop: true, autoHeight: true,
+  navigation: {
+    nextEl: ".dalbit-outer-container .swiper-button-next",
+    prevEl: ".dalbit-outer-container .swiper-button-prev"
+  },
+  pagination: { el: ".swiper-pagination", clickable: true }
+});
+</script>
+</body>
+</html>
