@@ -3,10 +3,9 @@
 body{font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;background:#fff;color:#333;display:flex;min-height:100vh;}
 
 /* ── Sidebar ── */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:#fff;border-right:1px solid #ebebeb;display:flex;flex-direction:column;padding:36px 40px;z-index:100;overflow-y:auto;}
-.logo{display:inline-flex;margin-bottom:48px;text-decoration:none;line-height:1;}
-.logo-y{background:#f5c800;color:#111;font-size:42px;font-weight:900;padding:3px 7px 1px;line-height:1.05;display:block;}
-.logo-b{background:#111;color:#fff;font-size:42px;font-weight:900;padding:3px 7px 1px;margin-top:2px;line-height:1.05;display:block;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:#fff;border-right:1px solid #ebebeb;display:flex;flex-direction:column;padding:36px 40px;z-index:200;overflow-y:auto;transition:transform .3s;}
+.logo{display:block;margin-bottom:40px;text-decoration:none;}
+.logo img{width:150px;height:auto;display:block;}
 nav{flex:1;}
 nav ul{list-style:none;}
 .nav-item{margin-bottom:4px;}
@@ -22,14 +21,16 @@ nav ul{list-style:none;}
 
 /* ── Main wrap ── */
 .main-wrap{margin-left:280px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
-.content{flex:1;padding:48px 56px 56px;}
+
+/* ── Content (회사소개, CONTACT, 퀴즈 등) ── */
+.content{flex:1;padding:56px 56px 64px;max-width:900px;width:100%;margin:0 auto;}
 
 /* ── 회사소개 ── */
-.intro-card{background:#1d2d44;border-radius:8px;padding:40px 46px;margin-bottom:24px;max-width:860px;}
+.intro-card{background:#1d2d44;border-radius:8px;padding:40px 46px;margin-bottom:24px;}
 .intro-title{font-size:19px;font-weight:700;color:#c9a940;margin-bottom:24px;}
 .intro-card p{font-size:14px;line-height:1.9;color:#c8d0db;margin-bottom:14px;}
 .intro-card p:last-child{margin-bottom:0;}
-.info-card{background:#fff;border:1px solid #e8e8e8;border-left:4px solid #f5c800;border-radius:4px;padding:22px 28px;margin-bottom:14px;max-width:860px;}
+.info-card{background:#fff;border:1px solid #e8e8e8;border-left:4px solid #f5c800;border-radius:4px;padding:22px 28px;margin-bottom:14px;}
 .info-card h3{font-size:15px;font-weight:700;color:#111;margin-bottom:10px;}
 .info-card p{font-size:13px;line-height:1.8;color:#555;}
 .platform-list{font-size:13px;color:#777;line-height:2;}
@@ -39,12 +40,10 @@ nav ul{list-style:none;}
 
 /* ── 작품소개 Swiper ── */
 .dalbit-outer-container{width:100%;position:relative;background:#fff;min-height:calc(100vh - 80px);display:flex;flex-direction:column;justify-content:center;padding:40px 150px;}
-@media(max-width:767px){.dalbit-outer-container{padding:40px 20px;overflow-x:hidden;}}
 .dalbit-main-content{width:100%;max-width:1050px;margin:0 auto;position:relative;}
 .swiper{width:100%;overflow:hidden!important;padding-top:30px!important;padding-bottom:60px!important;}
 .swiper-pagination{bottom:0!important;}
-.slide-content{display:flex;flex-direction:column;width:100%;}
-@media(min-width:768px){.slide-content{flex-direction:row;align-items:stretch;gap:50px;}}
+.slide-content{display:flex;flex-direction:row;align-items:stretch;gap:50px;width:100%;}
 .work-poster{width:260px;height:364px;object-fit:cover;object-position:top!important;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,.15);flex-shrink:0;}
 .work-poster-placeholder{width:260px;height:364px;background:#f5f5f5;border-radius:8px;border:1px solid #eaeaea;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;flex-shrink:0;}
 .work-info{display:flex;flex-direction:column;flex:1;min-width:0;}
@@ -59,10 +58,9 @@ nav ul{list-style:none;}
 .yes24{background:#243d83}.bomtoon{background:#ff3b5c}.bookcube{background:#f06000}.joara{background:#2f3438}
 .swiper-button-next,.swiper-button-prev{position:absolute!important;color:#222!important;top:50%!important;transform:translateY(-50%)!important;width:60px!important;height:60px!important;z-index:999!important;}
 .swiper-button-next:after,.swiper-button-prev:after{font-size:50px!important;font-weight:bold;}
-@media(min-width:768px){.swiper-button-prev{left:40px!important}.swiper-button-next{right:40px!important}}
-@media(max-width:767px){.slide-content{align-items:center;text-align:center}.work-poster{width:200px;height:280px;margin-bottom:25px}.platform-wrap{justify-content:center}.swiper-button-prev,.swiper-button-next{opacity:.15!important}}
+.swiper-button-prev{left:40px!important}.swiper-button-next{right:40px!important}
 
-/* ── 취향매칭 ── */
+/* ── 취향매칭·라이브러리 ── */
 .quiz-back{font-size:13px;color:#888;margin-bottom:16px;cursor:pointer;text-decoration:none;display:inline-block;}
 .quiz-back:hover{color:#333;}
 .quiz-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:36px;max-width:600px;}
@@ -70,12 +68,14 @@ nav ul{list-style:none;}
 .quiz-question{font-size:18px;font-weight:700;color:#111;margin-bottom:24px;}
 .quiz-option{display:block;width:100%;text-align:left;padding:14px 20px;border:1px solid #e0e0e0;border-radius:6px;background:#fff;font-size:14px;color:#333;cursor:pointer;margin-bottom:10px;transition:all .15s;}
 .quiz-option:hover{border-color:#f5c800;background:#fffbea;}
+.page-placeholder{text-align:center;padding:60px 20px;}
+.page-placeholder .og-image{width:100%;max-width:500px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);margin-bottom:28px;}
+.page-placeholder h2{font-size:22px;font-weight:700;color:#111;margin-bottom:12px;}
+.page-placeholder p{font-size:14px;color:#666;line-height:1.8;margin-bottom:24px;}
+.page-placeholder .notice{font-size:13px;color:#aaa;background:#f8f8f8;border-radius:6px;padding:16px 20px;margin-top:20px;text-align:left;}
 
 /* ── CONTACT ── */
-.contact-header{margin-bottom:28px;max-width:860px;}
-.contact-header h2{font-size:26px;font-weight:700;color:#111;margin-bottom:6px;}
-.contact-header p{font-size:14px;color:#888;}
-.contact-section{border:1px solid #e8e8e8;border-left:4px solid #f5c800;border-radius:4px;padding:28px 32px;margin-bottom:16px;max-width:860px;}
+.contact-section{border:1px solid #e8e8e8;border-left:4px solid #f5c800;border-radius:4px;padding:28px 32px;margin-bottom:16px;}
 .contact-section h3{font-size:16px;font-weight:700;color:#111;margin-bottom:14px;}
 .contact-section p{font-size:14px;line-height:1.8;color:#555;margin-bottom:8px;}
 .contact-section p:last-child{margin-bottom:0;}
@@ -94,3 +94,37 @@ footer{background:#252525;padding:28px 56px 24px;text-align:center;}
 .footer-nav a:hover{color:#fff;}
 .footer-info{font-size:12px;color:#777;margin-bottom:6px;}
 .footer-copy{font-size:11px;color:#555;}
+
+/* ── 모바일 상단 바 ── */
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid #ebebeb;align-items:center;justify-content:space-between;padding:0 20px;z-index:300;}
+.mobile-topbar img{height:36px;width:auto;}
+.hamburger{background:none;border:none;cursor:pointer;padding:8px;display:flex;flex-direction:column;gap:5px;}
+.hamburger span{display:block;width:22px;height:2px;background:#333;border-radius:2px;transition:all .3s;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;}
+.sidebar-overlay.visible{display:block;}
+
+/* ── 모바일 반응형 ── */
+@media(max-width:768px){
+  .mobile-topbar{display:flex;}
+  .sidebar{top:56px;transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main-wrap{margin-left:0;padding-top:56px;}
+  .content{padding:32px 20px 48px;}
+  .dalbit-outer-container{padding:24px 16px;}
+  .dalbit-main-content{padding:0;}
+  .swiper-button-prev,.swiper-button-next{opacity:.2!important;}
+  .swiper-button-prev{left:4px!important}.swiper-button-next{right:4px!important}
+  .slide-content{flex-direction:column;align-items:center;text-align:center;}
+  .work-poster{width:200px;height:280px;margin-bottom:24px;}
+  .platform-wrap{justify-content:center;}
+  .work-title{font-size:22px;}
+  .work-synopsis{font-size:14px;}
+  footer{padding:24px 20px 20px;}
+  .footer-nav{gap:16px;}
+  .intro-card{padding:28px 24px;}
+  .intro-title{font-size:16px;}
+  .intro-card p{font-size:13px;}
+  .info-card{padding:18px 20px;}
+  .contact-section{padding:20px 20px;}
+  .tugoan-row{flex-direction:column;gap:4px;}
+}

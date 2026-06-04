@@ -3,26 +3,372 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>달빛 라이브러리 | 달빛출판사</title>
+<title>달빛 라이브러리(GL) | 달빛출판사</title>
 <link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 <aside class="sidebar" id="sidebar"></aside>
 <div class="main-wrap">
-  <div class="content" style="display:flex;align-items:center;justify-content:center;min-height:300px;color:#aaa;font-size:15px;">
-    준비 중입니다.
+  <!-- 게임 컨테이너: 사이드바(280px) 제외한 영역에서 전체 높이 사용 -->
+  <div id="DL-WRAPPER" style="width:100%; height:calc(100dvh - 20px); min-height:520px; max-height:920px; background:transparent; font-family:'Noto Sans KR',sans-serif; user-select:none; overflow:hidden; display:flex; justify-content:center; padding:0;">
+    <style>
+        #DL-WRAPPER * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        #DL-WRAPPER .game-inner {
+            width: 100%; max-width: 500px; height: 100%; background: linear-gradient(135deg, #04050e 0%, #0b0d20 100%);
+            border-radius: 0; display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.8); overflow: hidden;
+            color: #f0e6c8; border: none;
+        }
+        @media (min-width: 500px) {
+            #DL-WRAPPER { padding: 10px; height: 90vh; max-height: 900px; }
+            #DL-WRAPPER .game-inner { border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        }
+        @keyframes dl-twink { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+        .dl-star { position: absolute; background: #fff; border-radius: 50%; pointer-events: none; z-index: 1; }
+        .serif { font-family: 'Noto Serif KR', serif; }
+        .screen { display: none; flex: 1; flex-direction: column; position: relative; z-index: 2; height: 100%; overflow: hidden; }
+        .screen.active { display: flex; }
+        .st-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; background: rgba(255,255,255,0.15); white-space: nowrap; }
+        .st-1 { color: #4a8fe8; border: 1px solid #4a8fe855; background: rgba(74, 143, 232, 0.15); }
+        .st-2 { color: #c9952a; border: 1px solid #c9952a55; background: rgba(201, 149, 42, 0.15); }
+        .st-3 { color: #e06090; border: 1px solid #e0609055; background: rgba(224, 96, 144, 0.15); }
+        .vib-glow-pnl { border: 2px solid #c9952a !important; box-shadow: 0 0 12px rgba(201,149,42,0.4); background: linear-gradient(135deg, #28180a, #3a2508) !important; }
+        .header { padding: 6px 12px; background: rgba(14, 16, 37, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2d45; flex-shrink: 0; }
+        .panel { padding: 6px 12px; background: rgba(255,255,255,0.04); display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #2a2d45; flex-shrink: 0; }
+        .timer-cir { width: 32px; height: 32px; border: 3px solid #c9952a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #c9952a; font-size: 13px; flex-shrink: 0; transition: border-color 0.3s; background: rgba(0,0,0,0.3); }
+        .timer-cir.danger { border-color: #f87171; color: #f87171; animation: dl-wa 0.7s ease-in-out infinite; }
+        @keyframes dl-wa { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px 10px; flex: 1; overflow-y: auto; align-content: start; }
+        @media (min-width: 450px) { .grid { gap: 8px; padding: 10px 14px; } }
+        .book-item { cursor: pointer; display: flex; flex-direction: column; transition: 0.2s; position: relative; }
+        .img-box { width: 100%; aspect-ratio: 1/1.45; border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: #000; margin-bottom: 2px; position: relative; }
+        .book-item:hover .img-box { border-color: #252d60; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .book-item.sel .img-box { border-color: #c9952a; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(201,149,42,0.5); }
+        .book-item.dm .img-box { opacity: 0.42; }
+        .book-item.vr .img-box { border-color: #4ade80; box-shadow: 0 0 12px rgba(74,222,128,0.4); }
+        .book-item.wr .img-box { border-color: #f87171; box-shadow: 0 0 12px rgba(248,113,113,0.4); }
+        .bvi { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(74,222,128,0.15); font-size: 20px; z-index: 5; }
+        .book-item.vr .bvi { display: flex; }
+        .book-item img { width: 100%; height: 100%; object-fit: cover; }
+        .book-t { font-size: 8.5px; line-height: 1.2; color: #fff; text-align: center; word-break: keep-all; height: 21px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; text-shadow: 0 1px 2px rgba(0,0,0,0.8); letter-spacing: -0.5px; }
+        .book-item.sel .book-t { color: #ffcc00; font-weight: 900; }
+        .footer { padding: 6px 12px; background: rgba(14, 16, 37, 0.98); display: flex; align-items: center; gap: 8px; border-top: 1px solid #2a2d45; flex-shrink: 0; height: 46px; }
+        .btn-ui { background: linear-gradient(135deg, #c9952a, #a67720); color: #fff; border: none; padding: 0 14px; height: 34px; border-radius: 6px; font-weight: 900; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.4); font-family: 'Noto Serif KR', serif; letter-spacing: 0.05em; }
+        .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(201,149,42,0.5); opacity: 0.9; }
+        .btn-ui:disabled { opacity: 0.35; cursor: not-allowed; background: #555; color: #ccc; box-shadow: none; }
+        .btn-center-wrap { width: 100%; display: flex; justify-content: center; padding: 10px 0; flex-shrink: 0; }
+        .btn-main { height: 42px; padding: 0 40px; font-size: 14px; border-radius: 8px; width: 100%; max-width: 260px; }
+        .res-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 10px; width: 100%; flex-shrink: 0; }
+        .h-line { display: flex; align-items: center; gap: 6px; font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .kw-tag { display: inline-block; padding: 6px 12px; background: rgba(201,149,42,0.1); border: 1px solid #c9952a55; border-radius: 6px; font-size: 11px; color: #fff; margin: 3px; font-weight: bold; }
+        .kw-tag .count { color: #f0e6c8; font-size: 10px; font-weight: normal; margin-left: 4px; }
+        .over-layer { position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; backdrop-filter: blur(4px); }
+        .over-layer.active { display: flex; }
+        .fb-sub { color: #f0e6c8; font-size: 12px; margin-top: 8px; font-weight: bold; }
+        .fluid-title { font-size: clamp(28px, 8vw, 46px); font-weight: 900; line-height: 1.1; margin-bottom: 10px; text-shadow: 0 0 30px rgba(201,149,42,0.4); text-align: center; }
+        .fluid-subtitle { font-size: clamp(12px, 3.5vw, 15px); line-height: 1.4; text-align: center; color: #fff; font-weight: bold; margin-bottom: 20px; }
+        .res-title { font-size: clamp(22px, 6vw, 34px); font-weight: 900; text-align: center; color: #fff; margin-bottom: 10px; }
+        .res-score-text { font-size: clamp(30px, 9vw, 46px); color: #ffcc00; font-weight: 900; text-shadow: 0 0 10px rgba(255,204,0,0.3); margin-bottom: 4px; }
+        .link-btn { display: inline-block; padding: 6px 14px; background: linear-gradient(135deg, #c9952a, #a67720); color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 11px; margin: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: 0.2s; }
+        .link-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(201,149,42,0.6); }
+    </style>
+
+    <div class="game-inner" id="DL-VIEWPORT">
+        <div id="dl-stars-container"></div>
+        <div id="dl-v-intro" class="screen active" style="justify-content: center; padding: 0 20px;">
+            <p style="text-align:center; color:#8090c0; font-size:9px; letter-spacing:0.2em; margin-bottom:6px; font-weight:bold;">DALBIC PUBLISHING HOUSE</p>
+            <h1 class="serif fluid-title">달빛<br>라이브러리</h1>
+            <div style="width: 40px; height: 3px; background: linear-gradient(90deg, transparent, #c9952a, transparent); margin: 0 auto 12px;"></div>
+            <p class="fluid-subtitle">달빛출판사 편집장으로 취임하신 것을 축하합니다.<br>GL소설을 찾아 온 독자의 취향에 맞는 책을 건네주세요.</p>
+            <div class="btn-center-wrap">
+                <button class="btn-ui btn-main" onclick="DALBIC.start()">영업 시작 🌙</button>
+            </div>
+        </div>
+        <div id="dl-v-game" class="screen">
+            <div class="header">
+                <span id="dl-stg" class="st-badge">형태</span>
+                <span style="font-size: 11px; color: #fff; font-weight: bold;">독자 <strong id="dl-pg" style="color: #ffcc00; font-size: 12px;">1/10</strong></span>
+                <span id="dl-sc" style="color:#ffcc00; font-weight: 900; font-size: 13px;">✨ 0</span>
+            </div>
+            <div id="dl-pb-wrap" style="height: 3px; background: rgba(255,255,255,0.1); width: 100%; flex-shrink: 0;">
+                <div id="dl-pb-fill" style="height: 100%; width: 0%; background: #c9952a; transition: width 0.3s;"></div>
+            </div>
+            <div id="dl-pnl" class="panel">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 45px;">
+                    <span id="dl-vb-tag" style="display:none; background:linear-gradient(135deg,#c9952a,#a67720); color:#fff; padding:2px 4px; border-radius:4px; font-size:8px; font-weight:900; margin-bottom:4px;">✨ VIB</span>
+                    <div id="dl-em" style="font-size: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);">👤</div>
+                    <div id="dl-nm" style="font-size: 9px; color:#fff; margin-top: 4px; font-weight: 900; text-align: center; line-height: 1.2;">이름</div>
+                </div>
+                <div style="flex:1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px;">
+                    <div id="dl-dl" style="font-size: 11px; line-height:1.4; color:#ffffff; font-weight: bold; word-break: keep-all;">대사</div>
+                    <div id="dl-vib-msg" style="display:none; color:#ffcc00; font-size:9px; font-weight:bold; margin-top:4px;">✨ VIB 작가님이 방문하셨습니다.</div>
+                </div>
+                <div id="dl-tm" class="timer-cir">40</div>
+            </div>
+            <div style="padding: 6px 10px 0; color: #fff; font-size: 10px; font-weight: bold; letter-spacing: -0.5px; flex-shrink: 0;">— 취향에 맞는 책을 골라주세요</div>
+            <div id="dl-gd" class="grid"></div>
+            <div class="footer">
+                <div id="dl-msg" style="flex:1; font-size: 11px; font-weight: 900; color:#f0e6c8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">책을 선택하세요</div>
+                <button id="dl-btn" class="btn-ui" disabled onclick="DALBIC.confirm()">건네기 📖</button>
+            </div>
+        </div>
+        <div id="dl-v-res" class="screen" style="overflow-y: auto; padding: 20px 12px;">
+            <p style="text-align:center; color:#8090c0; font-size:10px; font-weight:bold; letter-spacing:0.2em; margin-bottom:6px;">영업 종료</p>
+            <h2 class="serif res-title">나는 오늘...</h2>
+            <div style="width: 40px; height: 3px; background: linear-gradient(90deg, transparent, #c9952a, transparent); margin: 0 auto 12px;"></div>
+            <div class="res-box" style="background: rgba(201,149,42,0.1); border-color: rgba(201,149,42,0.3); text-align:center;">
+                <p id="res-score" class="serif res-score-text">0</p>
+                <p id="res-count" style="font-size:12px; font-weight: bold; color:#fff; margin-top:4px;">0/10 큐레이션 성공</p>
+            </div>
+            <div class="res-box" style="background: linear-gradient(135deg, rgba(40,25,8,0.7), rgba(20,15,45,0.7)); border-color: rgba(201,149,42,0.4);">
+                <h3 class="serif" style="color:#ffcc00; font-size:14px; font-weight:900; margin-bottom:10px; text-align:center;">📊 오늘의 영업 실록</h3>
+                <div id="res-report-content"></div>
+            </div>
+            <div class="res-box" style="background: rgba(0,0,0,0.3);">
+                <p style="font-size:10px; font-weight:bold; color:#8090c0; letter-spacing:0.1em; margin-bottom:8px;">상세 큐레이션 기록</p>
+                <div id="res-history" style="max-height:160px; overflow-y:auto; padding-right:4px;"></div>
+            </div>
+            <div class="btn-center-wrap" style="flex-direction: column; gap: 8px; margin-top: 5px;">
+                <button class="btn-ui btn-main" onclick="location.reload()">다시 영업하기 🌙</button>
+                <p style="font-size:9px; font-weight:bold; color:#6070a0;">달빛출판사 © DALBIC PUBLISHING HOUSE</p>
+            </div>
+        </div>
+        <div id="dl-v-fb" class="over-layer">
+            <div id="fb-ico" style="font-size: 40px; margin-bottom: 10px;">✨</div>
+            <h2 id="fb-h" class="serif" style="font-size: 22px; font-weight: 900; color: #fff;">완벽한 큐레이션!</h2>
+            <div id="fb-s" class="fb-sub"></div>
+        </div>
+    </div>
   </div>
-  <footer>
-    <ul class="footer-nav">
-      <li><a href="index.html">회사소개</a></li>
-      <li><a href="works.html">작품소개</a></li>
-      <li><a href="contact.html">CONTACT</a></li>
-    </ul>
-    <p class="footer-info">달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판</p>
-    <p class="footer-copy">Copyright ⓒ 2026 달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판 All rights reserved.</p>
-  </footer>
 </div>
+
 <script src="sidebar.js"></script>
 <script>renderSidebar('library');</script>
+<script>
+(function(){
+    var sc = document.getElementById('dl-stars-container');
+    for(var i=0; i<30; i++) {
+        var s = document.createElement('div'); s.className = 'dl-star';
+        var sz = (Math.random()*2.5+0.5)+'px'; s.style.width=sz; s.style.height=sz;
+        s.style.top=Math.random()*100+'%'; s.style.left=Math.random()*100+'%';
+        s.style.animation='dl-twink '+(Math.random()*3+2)+'s ease-in-out '+(Math.random()*4)+'s infinite';
+        sc.appendChild(s);
+    }
+
+    var W = [
+        { t: "십 분의 오", p: "https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo", k: "#현대물 #GL/백합 #로맨틱코미디 #오피스물 #사회인 #방송계 #재벌녀 #금수저 #영앤리치 #방송국 #PD #연상공 #능력공 #재벌공 #후회공 #상처공 #연하수 #평범수 #다정수 #외유내강 #집안사정 #재회 #동창 #선후배 #성장 #구원 #첫사랑 #트라우마 #피아노 #직장인로맨스 #나이차커플 #갑을관계 #선섹후사", l: "http://aladin.kr/p/JS2Ej" },
+        { t: "예외의 법칙", p: "https://lh3.googleusercontent.com/d/1hFg73VHwiCxB_iSmF056916idyL9gluq", k: "#GL/백합 #현대물 #오피스물 #일상물 #사회인 #직장인 #메디컬 #제약회사 #영업사원 #약사 #달달물 #초능력 #갑을관계 #오해/착각 #미인공 #연하공 #잔망공 #능글공 #연상수 #얼빠수 #단정수 #상처수", l: "https://t.co/vGZmtuPv8z" },
+        { t: "어떤 우정은", p: "https://lh3.googleusercontent.com/u/0/d/10AG2cGm383jzxd3XoCSn0sUkN7T4nDu1", k: "#현대물 #학원물 #캠퍼스물 #GL/백합 #고등학생 #대학생 #전학생 #사회인 #전문직 #헤테로 #헤녀 #순정녀 #다정녀 #직진녀 #쾌활발랄녀 #댕댕녀 #상처녀 #애교녀 #짝사랑녀 #동갑내기 #짝사랑 #삽질 #성장 #힐링 #현실연애 #동갑커플 #친구>연인 #달달물 #해피엔딩", l: "http://aladin.kr/p/PS4Zy" },
+        { t: "시한부 공녀님의 마지막 여행", p: "https://drive.google.com/thumbnail?id=18KIb0BBPGwgp9YG6n6pC3qJQyjxL36Bq&sz=s4000", k: "#GL/백합 #가상시대물 #판타지물 #서양풍 #왕족/귀족 #기사 #여기사 #용병 #아가씨 #마법사 #왕족/귀족녀 #직진녀 #후회녀 #다정녀 #상처녀 #힐링물 #불운 #도망 #시한부 #애잔 #재회 #여행 #계약관계 #신분차이 #달달 #순애 #성장 #권선징악 #쌍방구원 #능력녀 #첫사랑 #비밀연애 #잔잔 #일상물", l: "http://aladin.kr/p/oEo5Zv" },
+        { t: "솔티드 카라멜 초콜릿", p: "https://drive.google.com/thumbnail?id=1XMZzlLelebd4ubjqOAf3qVnZszcn0RZi&sz=s4000", k: "#GL/백합 #현대물 #로맨틱코미디 #대학생 #직장인 #사회인 #이웃사촌 #야덕 #야빠 #연하공 #잔망공 #계략공 #직진녀 #연상수 #순진수 #다정수 #아방수 #일상 #짝사랑 #친구>연인 #옆집언니 #역키잡 #독점욕/질투 #나이차커플 #연상연하커플 #달달 #해피엔딩 #집착공 #사랑꾼공 #순정공 #가증공 #단정수 #힐링물", l: "http://aladin.kr/p/pE6hu" },
+        { t: "오류 해결을 바라신다면", p: "https://drive.google.com/thumbnail?id=1YAL2aAanD03L3G4nCrRoOP_S3MKpQNdL&sz=s4000", k: "#GL/백합 #현대물 #판타지물 #센티넬버스 #가이드버스 #학원물 #오피스물 #고등학생 #직장인 #사회인 #공무원 #공기관 #국가기관 #인외존재 #초능력 #평범녀 #재벌녀 #과묵녀 #후회녀 #상처녀 #성장물 #친구>연인 #오해 #불운 #애증 #트라우마 #재회 #사내연애 #동갑내기 #나이차커플 #달달 #해피엔딩 #초딩공 #짝사랑수 #외유내강수", l: "http://aladin.kr/p/fC2Cq" },
+        { t: "다시는 사랑에 빠지지 않는 방법", p: "https://drive.google.com/thumbnail?id=1R4SNxZUP47oWzi65Mlvv2gtNwougZ61B&sz=s4000", k: "#현대물 #GL/백합 #연예계물 #운동선수 #농구선수 #가수 #아이돌 #방송인 #농구 #외국인 #교포 #용병 #걸그룹 #맏언니 #직진공 #다정공 #절륜공 #걸크러시 #애교수 #상처수 #능력공 #연상공 #연하수 #일상 #잔잔 #시한부연애 #오해 #성장물 #해피엔딩", l: "http://aladin.kr/p/RCCCE" },
+        { t: "수상한 최 과장", p: "https://drive.google.com/thumbnail?id=1l6Rcc0MxmJPk2VeYREhRe54Fr5LjxlsG&sz=s4000", k: "#현대물 #오피스물 #GL/백합 #교직원 #대학교 #행정직 #상사 #부하 #순정녀 #다정녀 #직진녀 #상처녀 #재벌녀 #능력녀 #연상공 #연하수 #여주중심 #일상 #잔잔 #성장 #삽질 #혐관 #첫사랑 #현실연애 #재회 #선후배 #나이차커플 #해피엔딩", l: "http://aladin.kr/p/2RAGb" },
+        { t: "이름 없는 기억", p: "https://drive.google.com/thumbnail?id=15269j6eaNYzEMBQcNdkGAaVGu6Rmcc0L&sz=s4000", k: "#현대물 #학원물 #캠퍼스물 #GL/백합 #고등학생 #대학생 #전학생 #순정녀 #다정녀 #직진녀 #쾌활발랄녀 #상처녀 #모범생 #동갑내기 #기억상실 #삽질 #성장 #현실연애 #몰래연애 #재회 #동갑커플 #선후배 #친구>연인 #달달물 #해피엔딩", l: "http://aladin.kr/p/kRi5r" },
+        { t: "나를 경멸하는 당신에게 바치는 연서", p: "https://drive.google.com/thumbnail?id=1imzykkGzxZyN3Yq6oHxsAIEwCTnsEP5S&sz=s4000", k: "#GL/백합 #가상시대물 #판타지물 #서양풍 #근대 #서간체 #왕족/귀족 #기사 #여기사 #왕족/귀족녀 #직진녀 #동정녀 #후회녀 #다정녀 #상처녀 #힐링물 #첫사랑 #오해 #불운 #애증 #재회 #편지 #쌍방짝사랑 #쌍방삽질 #나이차커플 #신분차이 #애잔 #달달", l: "http://aladin.kr/p/wqVVG" },
+        { t: "김산산전", p: "https://drive.google.com/thumbnail?id=1hpOOrxZG_7sj5S8zIsMYeRqRednTdTEQ&sz=s4000", k: "#시대물 #가상시대물 #역사물 #GL/백합 #판타지 #동양풍 #액션 #조선 #조선후기 #개화기 #종교 #천주학 #아가씨 #하녀 #주종관계 #갑을관계 #신분차이 #외국인 #이방인 #이능력 #신령 #인외존재 #연하공 #연상수 #외국인/혼혈녀 #직진녀 #걸크러시 #성장 #애증 #쌍방삽질 #모험", l: "http://aladin.kr/p/nzvBx" },
+        { t: "완벽한 계획에 그녀들이란 변수", p: "https://drive.google.com/thumbnail?id=1vTYzJgJd_UI0-t9eJFjKv0rYaQofaWlM&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #연예인 #방송인 #배우 #가수 #기업가 #재벌 #선후배 #언니동생 #완벽주의자 #연예계 #삼각관계 #다각관계 #짝사랑 #커밍아웃 #스캔들 #직진녀 #다정녀 #재벌녀 #집착녀 #인기녀 #짝사랑녀 #오만녀 #직장인로맨스 #친구>연인 #재회 #일상 #성장", l: "http://aladin.kr/p/dRKmf" },
+        { t: "몇 번이나 바랐을까", p: "https://drive.google.com/thumbnail?id=1HQEoVXE5Hp9Sgb9qkb4UfnsB88DLW4dp&sz=s4000", k: "#GL/백합 #현대물 #느와르 #범죄물 #수사물 #조직/암흑가 #경찰/형사/수사관 #전과자 #섹스파트너 #수사 #뒷세계 #계략녀 #애교녀 #후회녀 #연상공 #연하수 #절륜공 #까칠공 #재회 #다각관계 #몸정>맘정 #약SM #독점욕/질투 #애증 #복수 #트라우마 #스릴러 #상처녀 #무심녀 #사이다녀 #나쁜여자 #냉정녀 #무심녀 #걸크러시 #오해 #살인 #인과응보 #서스펜스", l: "http://aladin.kr/p/eR2wz" },
+        { t: "여름의 숲은 푸르다", p: "https://drive.google.com/thumbnail?id=1BaNwRnFiyLvn_ogpHtYl7skzqaQxl2tS&sz=s4000", k: "#GL/백합 #현대물 #사회인 #직장인 #대학생 #금수저 #연상수 #연하공 #직진공 #아방공 #허약공 #까칠수 #무심수 #재벌녀 #능력녀 #힐링 #성장 #달달 #일상 #키잡 #나이차커플 #정략결혼 #선결혼후연애 #너말고니동생 #순정공 #짝사랑공 #호구공 #단정수", l: "https://t.co/byvrPXTafz" },
+        { t: "암실", p: "https://drive.google.com/thumbnail?id=1dv1D7ado-EtVBzCKjRAMYG-8CUWbNs9T&sz=s4000", k: "#GL/백합 #현대물 #느와르 #추리/미스터리물 #수사물 #조직/암흑가 #경찰/형사/수사관 #잠복 #수사 #뒷세계 #마약 #후회녀 #까칠녀 #계략녀 #직진녀 #재회 #출생의비밀 #다각관계 #동거 #애증 #복수 #반전 #스릴러 #화류계 #연하공", l: "http://aladin.kr/p/hq0lf" },
+        { t: "마치 기적과도 같은", p: "https://drive.google.com/thumbnail?id=17y8LsXQDJX4HRKmTtXMmz_ouP1uYAuWd&sz=s4000", k: "#GL/백합 #현대물 #판타지물 #궁중물 #입헌군주제 #대학생 #공주 #왕 #왕족 #군인 #공군 #파일럿 #장교 #기장 #평범녀 #왕족/귀족녀 #연상수 #연하공 #절륜공 #직진공 #충견공 #후회공 #상처수 #임신수 #힐링물 #성장물 #첫사랑 #친구>연인 #오해 #불운 #애증 #트라우마 #재회 #동갑 #가족 #임신 #출산 #동갑커플 #주종관계 #신분차이 #결혼엔딩 #해피엔딩 #달달 #캠퍼스물 #예민수 #병약수 #다정공 #헌신공", l: "http://aladin.kr/p/Kqlnd" },
+        { t: "어쩔 수 없는 것", p: "https://drive.google.com/thumbnail?id=1vsXBkhvmm9iPrHUlPMYQi20JZc5w5kaW&sz=s4000", k: "#GL/백합 #현대물 #모녀백합 #고등학생 #고교생 #수재 #수험생 #유부녀 #가정주부 #모녀관계 #후회녀 #상처녀 #피폐물 #근친물 #근친 #모녀 #결손가정 #자살 #수능 #배덕 #가족애 #성애 #트라우마 #상실 #불운 #나이차커플 #금단의관계 #동거 #성장", l: "http://aladin.kr/p/Zq4RF" },
+        { t: "전개가 바뀌지 않아서 장르를 바꾸려고 합니다", p: "https://drive.google.com/thumbnail?id=1xa7UGD3mzr0CU2gWLu8ATZ9vMz_Yxvqn&sz=s4000", k: "#판타지물 #GL/백합 #회귀물 #가상시대물 #서양풍 #회귀/타임슬립 #판타지 #마법 #계약관계 #정략결혼 #신분차이 #재벌녀 #계략녀 #다정녀 #걸크러시 #능력녀 #왕족/귀족녀 #성장 #다각관계 #집착 #쌍방삽질 #해피엔딩 #결혼엔딩 #짝사랑녀", l: "http://aladin.kr/p/AqR3j" },
+        { t: "엘리, 그 지긋지긋한 새끼", p: "https://drive.google.com/thumbnail?id=1JMD7ryaTzauOczi4K2XvztWsAtk65cAV&sz=s4000", k: "#현대물 #GL/백합 #하이틴로맨스 #학원물 #미국 #고등학생 #하이틴 #인싸 #너드 #소꿉친구 #친구>연인 #라이벌/앙숙 #동갑내기 #헤테로 #헤녀 #평범녀 #재벌녀 #계략녀 #직진녀 #집착녀 #능력녀 #까칠녀 #오해 #애증 #성장 #일상 #독점욕/질투 #동갑커플 #결혼엔딩", l: "http://aladin.kr/p/gq19I" },
+        { t: "열애소설", p: "https://drive.google.com/thumbnail?id=1L-yTOTs-yhu0wiufwQGxqDyg6n0kM4m6&sz=s4000", k: "#시대물 #가상시대물 #역사물 #GL/백합 #일제강점기 #일제시대 #조선 #근대조선 #조선후기 #독립운동 #아가씨 #하녀 #주종관계 #갑을관계 #신분차이 #독립군 #게릴라 #비밀조직 #친일파 #연하공 #절륜공 #연상수 #미인수 #직진녀 #후회녀 #재회 #복수 #오해 #성장 #나이차커플", l: "http://aladin.kr/p/EqWEd" },
+        { t: "근원? 근심!", p: "https://drive.google.com/thumbnail?id=12xSB3y9OvtGfriICumyKT0S5cxPNCYf-&sz=s4000", k: "#현대물 #GL/백합 #게임물 #온라인게임 #게임 #RPG #길드 #던전 #퀘스트 #겜생 #게이머 #게임폐인 #뉴비 #고인물 #대학생 #평범녀 #직진녀 #애교녀 #연상수 #순진공 #연하공 #능글수 #미인수 #달달 #일상 #나이차커플 #해피엔딩", l: "http://aladin.kr/p/PQMBz" },
+        { t: "물 만난 언니", p: "https://drive.google.com/thumbnail?id=1xnjNaLvbpUowmmiRBorbycO4J64GaXgk&sz=s4000", k: "#GL #백합 #소설 #현대물 #사회인 #직장인 #운동 #요가 #수영 #수영장 #목욕 #목욕탕 #모임 #연상공 #연하수 #평범녀 #직진녀 #다정녀 #걸크러시 #순진녀 #인싸 #핵인싸 #짝사랑 #소심 #내향적 #라이벌 #오해 #힐링 #달달 #일상 #직장인로맨스 #요가원", l: "http://aladin.kr/p/vQFh3" },
+        { t: "네 남편의 조건", p: "https://drive.google.com/thumbnail?id=1aefBCpoctJzE-rMKpg9NFyB295uQPkAV&sz=s4000", k: "#현대물 #GL/백합 #BDSM #사회인 #연예계 #재벌녀 #금수저 #영앤리치 #달변 #대기업 #임원 #아이돌 #걸그룹 #연상공 #능력공 #후회공 #직진공 #능글공 #연하수 #자낮수 #후회수 #상처수 #펨돔 #펨섭 #사디스트 #매저키스트 #도미넌트 #서브미시브 #착각물 #집안사정 #가정환경 #불우 #재회 #트라우마 #상처 #독점욕/질투 #SM플레이 #도구플 #도그플 #직장인로맨스 #나이차커플 #고수위 #결혼엔딩", l: "https://t.co/oeIgkRxTD4" },
+        { t: "이제 가족이 되겠습니다", p: "https://drive.google.com/thumbnail?id=1bX-DeraY6swm9-cEaqmfiR-WKNalT3sz&sz=s4000", k: "#GL/백합 #소설 #시대물 #가상시대물 #역사물 #전쟁물 #서양풍 #지중해 #로마 #여제 #과부 #유부녀 #나이차커플 #갑을관계 #신분차이 #여왕공 #유혹공 #계략공 #집착공 #댕댕수 #헌신수 #다정수 #권력자 #여왕 #여장군 #귀족 #오해 #독점욕/질투 #걸크러시 #왕족/귀족녀 #동거엔딩", l: "http://aladin.kr/p/uQf42" },
+        { t: "호감도가 보이기 시작했다", p: "https://drive.google.com/thumbnail?id=1eLt-piO0yQu4Sqhs003isHjyBwrzJjaq&sz=s4000", k: "#현대물 #판타지물 #GL #백합 #SF #대학생 #사회인 #RPG #헌터 #던전 #몬스터 #차원이동 #이능력 #능력자 #다각관계 #스테이터스 #하렘 #액션 #인외존재 #초월적존재 #라이벌/앙숙 #트라우마 #상처 #평범녀 #직진녀 #쾌활발랄녀 #상처녀 #인기녀 #성장 #해피엔딩 #다정녀 #후회녀 #무심녀", l: "http://aladin.kr/p/94sTm" },
+        { t: "두 번째 첫사랑", p: "https://drive.google.com/thumbnail?id=1PocYjb7h0a2hTE37sW5ZIkO41k3_61wp&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #간호사 #전문직 #환자 #병원 #동창생 #여고동창 #첫사랑 #짝사랑 #헤테로 #헤녀 #삼각관계 #재회 #친구>연인 #현실적 #평범녀 #직진녀 #다정녀 #짝사랑녀 #순진녀 #직장인로맨스 #동갑커플 #달달 #일상 #동거엔딩", l: "http://aladin.kr/p/E4ZJM" },
+        { t: "비커밍 엑스", p: "https://drive.google.com/thumbnail?id=1OEEMSGWBn04pGxNcB6XqbMTcxfE53qi-&sz=s4000", k: "#현대물 #GL #백합 #판타지 #SF #포스트아포칼립스 #가이드 #가이드버스 #초능력 #인외존재 #외계생명체 #외국인 #연하공 #절륜공 #순진공 #연상수 #유혹수 #직진녀 #애교녀 #걸크러시 #능력녀 #상처녀 #성장물 #능력자물 #액션 #재회 #트라우마 #상처 #결손 #기억상실 #오해 #직장인로맨스 #사내연애 #나이차커플 #동거엔딩 #권선징악 #헌신수 #미인수", l: "http://aladin.kr/p/B4TYQ" },
+        { t: "하멜른의 피리", p: "https://drive.google.com/thumbnail?id=1CuAPSpCPG0SJduuvLHHDz0ZSD_w9lzPa&sz=s4000", k: "#현대물 #GL #백합 #포스트아포칼립스 #좀비물 #사회인 #외국 #해외 #인외 #응급구조사 #의사 #패러메딕 #첫만남 #우연 #운명 #상처 #재난 #좀비 #감염 #전염병 #군인 #연하공 #연상수 #다정녀 #걸크러시 #절륜녀 #능력녀 #쌍방호감 #액션 #서바이벌 #동거엔딩 #해피엔딩 #생존로맨스 #판타지 #순정공 #미인공 #헌신공 #존댓말공 #미인수 #집착수 #쌍방구원", l: "http://aladin.kr/p/S4vZl" },
+        { t: "백구야, 이리 와", p: "https://drive.google.com/thumbnail?id=1TP33N8deoj02grRxlNjj7qrTL0t7hjO-&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #재벌녀 #금수저 #영앤리치 #직장상사 #팀장님 #사내연애 #다각관계 #상하관계 #트라우마 #상처 #연적 #구여친 #재회 #연상공 #연하수 #상처녀 #재벌녀 #절륜녀 #능력녀 #평범녀 #직장인로맨스 #나이차커플 #달달 #일상 #동거엔딩", l: "http://aladin.kr/p/y40TA" },
+        { t: "코스믹라떼", p: "https://drive.google.com/thumbnail?id=1aVL7zp3Q_ji8yxpFyV2TWnkAHbrdd-tm&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #연예인 #방송인 #PD #아이돌 #걸그룹 #가수 #방송국 #다큐멘터리 #연예계 #첫사랑 #나이차커플 #비밀연애 #직진공 #다정공 #능력공 #인텔리공 #연상공 #애교수 #순진수 #활발수 #연하수 #직장인로맨스 #일상 #성장 #추억 #달달 #능력수", l: "http://aladin.kr/p/Gzg8o" },
+        { t: "라스트 트래블", p: "https://drive.google.com/thumbnail?id=1Ac8UP80rWqqn39_-C1wH3rd6RN5UnUC6&sz=s4000", k: "#GL #백합 #판타지물 #가상시대물 #서양풍 #초월적존재 #대학생 #흔녀 #황제 #왕족/귀족 #계약관계 #신분차이 #왕족공 #다정공 #능력공 #평범수 #순진수 #존대수 #차원이동 #이세계 #권선징악 #달달 #결혼엔딩", l: "http://aladin.kr/p/azC9V" },
+        { t: "옆에 누워요", p: "https://drive.google.com/thumbnail?id=1cCZmrvcFTlEr3CZ5j-fvYWZScRQZYBnQ&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #영앤리치 #인터넷강사 #수학강사 #선생님 #학생 #수험생 #재수생 #가구점 #연하공 #연상수 #절륜공 #직진공 #순정수 #능력녀 #평범녀 #다정녀 #쾌활발랄녀 #달변 #직장인로맨스 #나이차커플 #달달 #일상 #동거엔딩 #학원 #삼수생", l: "https://t.co/7c8EJmswf5" },
+        { t: "윗치 퍼펙트", p: "https://drive.google.com/thumbnail?id=1_SGcqIOf3jCnMFNpCMB_pUSbUp6ctjXq&sz=s4000", k: "#현대물 #로맨틱코미디 #판타지물 #GL #백합 #사회인 #직장인 #재벌녀 #금수저 #영앤리치 #호텔 #마력 #마녀 #연하공 #연상수 #능글공 #순정수 #유혹수 #직진녀 #재벌녀 #절륜녀 #능력녀 #까칠녀 #쾌활발랄녀 #능력자물 #하렘 #직장인로맨스 #나이차커플 #낮져밤이 #낮이밤져 #까칠수", l: "http://aladin.kr/p/MQuKQ" },
+        { t: "true romance", p: "https://drive.google.com/thumbnail?id=1Sn1xzwu7FmTL3FNTkEFqt4WoUOo6sluS&sz=s4000", k: "#현대물 #GL #백합 #사회인 #대학생 #체대생 #태권도 #유학생 #평범녀 #직진녀 #후회녀 #절륜녀 #쾌활발랄녀 #연하공 #연상수 #다정공 #불도저공 #적극공 #유혹수 #알콩달콩 #데이트 #재회 #첫사랑 #역키잡 #성장 #달달 #일상 #아웃팅 #직장인로맨스 #사회인로맨스 #나이차커플", l: "https://bit.ly/3BWdtRp" },
+        { t: "고르디우스의 굴레", p: "https://drive.google.com/thumbnail?id=1nvn9o4Lh5c0ze6sJmOUkxwUFGhDZfo3g&sz=s4000", k: "#GL #백합 #소설 #시대물 #가상시대물 #역사물 #전쟁물 #서양풍 #고대 #마케도니아 #이집트 #페르시아 #알렉산더 #알렉산드로스 #파라오 #쑥맥공 #여왕공 #유혹수 #츤데레수 #남장여자 #권력자 #여왕 #여전사 #출생의비밀 #복수 #정략결혼 #걸크러시 #왕족/귀족녀 #성장", l: "http://aladin.kr/p/bf0FQ" },
+        { t: "시급", p: "https://drive.google.com/thumbnail?id=1oPc12gxVd2MpH29qZIjLOGqvpeaVnvdp&sz=s4000", k: "#후회공 #초능력 #가이드버스 #능글공 #처연수 #순정수 #첫사랑 #현대물 #GL #백합 #사회인 #SF #특기자 #센티넬 #가이드 #센티넬버스 #재벌녀 #금수저 #영앤리치 #비정규직 #계약직 #일용직 #흙수저 #연상공 #능력공 #연하수 #나약수 #순진수 #어벙수 #성장물 #피폐물 #능력자물 #착각물 #삽질물 #집안사정 #가정환경 #불우 #편모가정 #콩가루집안 #트라우마 #상처 #데이트 #알콩달콩 #직장인로맨스 #나이차커플", l: "http://aladin.kr/p/9fedf" },
+        { t: "어느 외눈박이에게", p: "https://drive.google.com/thumbnail?id=1mgKaRywzvWmLFxqTHLMQHgLev-Xp4wIM&sz=s4000", k: "#현대물 #GL #백합 #SF #부양자 #컬러버스 #금수저 #재벌녀 #평범녀 #후회녀 #상처녀 #색맹 #재회물 #성장물 #집안사정 #가정환경 #불우 #오해 #트라우마 #상처 #애잔 #동갑내기 #계약관계 #동갑커플 #쌍방구원", l: "http://aladin.kr/p/0f5wb" },
+        { t: "시시때때로", p: "https://drive.google.com/thumbnail?id=1yhcPw9p5o1pHVrXp0PnsLdm0DI8KhDWs&sz=s4000", k: "#현대물 #GL #백합 #사회인 #특수기관 #시간여행 #SF #특수요원 #사이코 #인강강사 #한국사강사 #개룡녀 #피폐물 #시간여행물 #착각물 #혐관 #인과역전 #역사개변 #과거회귀 #부분시대물 #사내연애 #삽질물 #상처 #생일 #생일노래 #직장인로맨스 #동거엔딩 #나이차커플 #병약수 #순진수 #성장물 #연상공 #연하수 #능력공 #까칠", l: "http://aladin.kr/p/j4JhE" },
+        { t: "가장 완벽한 고백의 밤", p: "https://drive.google.com/thumbnail?id=1cr7wOPCNJ-BXIEdOgE6oCAS49VApJuPp&sz=s4000", k: "#현대물 #GL #백합 #대학교 #대학생 #좀비 #좀비물 #좀비아포칼립스 #비상사태 #계엄령 #이공계 #이공계녀 #인기녀 #동기 #동창 #동갑내기 #동갑커플 #기숙사생 #자취녀 #군인 #능력수 #순정수 #천재수 #순진공 #다정공 #어벙공 #쑥맥공 #짝사랑 #착각물 #쌍방호감 #재난 #재난물 #감염 #감염자 #격리 #빌런 #어그로 #생존 #서바이벌 #알콩달콩 #쌍방벤츠 #캠퍼스로맨스 #생존로맨스", l: "http://aladin.kr/p/EP6Hh" },
+        { t: "사랑이 스미는 중", p: "https://drive.google.com/thumbnail?id=181wWH-H0PMutyu27Q63tUuhP83k1vfw4&sz=s4000", k: "#현대물 #GL #백합 #사회인 #직장인 #작가 #소설작가 #독자 #애독자 #구독자 #팬 #연상수 #상처수 #순정수 #연하공 #불도저공 #적극공 #절륜공 #현실연애 #삽질물 #상처 #데이트 #알콩달콩 #공원 #소원 #석탑 #돌탑 #운동 #옛여친 #수라장 #직장인로맨스 #나이차커플 #동거엔딩", l: "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=292317125" },
+        { t: "첫사랑", p: "https://drive.google.com/thumbnail?id=1WmEi8zhCaYihaH_2X6Aam5DSvWyfM0kf&sz=s4000", k: "#현대물 #GL #백합 #고등학생 #대학생 #질풍노도 #청소년 #인싸 #아싸 #따돌림 #마성의여자 #연상공 #연하수 #다정공 #대인배공 #벤츠공 #까칠수 #비글수 #깐깐수 #고등학교 #대학교 #현실적 #쌍방호감 #쌍방관심 #데이트 #알콩달콩 #첫사랑 #짝사랑 #상처 #트라우마 #사연있음 #삽질물 #하이스쿨로맨스 #캠퍼스로맨스 #청춘로맨스 #나이차커플", l: "http://aladin.kr/p/Cffgs" },
+        { t: "첫사랑 고득점 N제", p: "https://drive.google.com/thumbnail?id=1IZlfh92ogWkkIph4PV5WgPt21m59awIO&sz=s4000", k: "#현대물 #GL #백합 #고등학생 #고딩 #외고 #외국어고등학교 #고3 #대학생 #급식 #학식 #모범생 #선비 #유교걸 #넌씨눈 #날라리 #전교1등 #수재 #수험생 #막내딸 #동갑커플 #인기녀 #마성의여자 #달달물 #현실적 #현실연애 #입시 #대학입시 #수능 #쌍방호감 #데이트 #알콩달콩 #순진공 #다정공 #범생공 #절륜공 #지랄수 #불도저수 #유혹수 #청춘로맨스 #하이스쿨로맨스 #쌍방삽질 #소꿉친구 #사랑과우정사이 #AGAIN2008", l: "http://aladin.kr/p/GfZBV" },
+        { t: "그해 여름", p: "https://drive.google.com/thumbnail?id=1PcfmsWIi4rJk4km3Iv4TMIu6_ZOPCBeZ&sz=s4000", k: "#현대물 #GL #백합 #고등학생 #대학생 #교생 #선생님 #학생 #질풍노도 #청소년 #불량아 #수험생 #미인 #미인교사 #사제관계 #교생실습 #고등학교 #현실적 #쌍방호감 #데이트 #알콩달콩 #첫사랑 #밀당 #사연있음 #여름 #계절물 #하이스쿨로맨스 #청춘로맨스 #사제백합 #연상공 #연하수", l: "http://aladin.kr/p/of3nY" },
+        { t: "첫사랑 작동법", p: "https://drive.google.com/thumbnail?id=1xZFk6RB_MNRaaEdNfCau2JmyZABroWbm&sz=s4000", k: "#현대물 #GL #백합 #대학생 #신입생 #경영학도 #직속선배 #직속후배 #순정녀 #다정녀 #밀당 #주종관계 #퀸카 #인기녀 #평범녀 #흔녀 #카페알바 #자취생 #반지하 #재벌녀 #금수저 #달달물 #현실적 #현실연애 #쌍방호감 #데이트 #알콩달콩 #첫사랑 #삽질물 #과거사정 #상처 #사연있음 #빌런 #라이벌 #이간질 #캠퍼스로맨스 #연상공 #능력공 #연하수", l: "http://aladin.kr/p/m4FRD" },
+        { t: "밤과 밤", p: "https://drive.google.com/thumbnail?id=1MR5FwYCVg7AhXPJ_7BdETCvxFOMgQ-e4&sz=s4000", k: "#현대물 #GL #백합 #대학생 #이공계 #순정녀 #다정녀 #밀당고수 #동갑커플 #퀸카 #인기녀 #평범녀 #흔녀 #카페알바 #자취녀 #마성의여자 #달달물 #현실적 #몰래연애 #비밀연애 #쌍방호감 #자취방연애 #데이트 #알콩달콩 #삽질물 #집안사정 #캠퍼스로맨스 #직장인로맨스 #동거엔딩 #현실연애 #계략 #집착 #첫사랑", l: "http://aladin.kr/p/PPvg3" },
+        { t: "친구 사이에", p: "https://drive.google.com/thumbnail?id=1ZVc-bBrdphRRbqOrPzKtUzYJmLyfIbPM&sz=s4000", k: "#현대물 #GL #백합 #대학생 #이공계 #순정녀 #다정녀 #밀당고수 #동갑커플 #퀸카 #인기녀 #평범녀 #흔녀 #카페알바 #자취녀 #마성의여자 #달달물 #현실적 #몰래연애 #비밀연애 #쌍방호감 #자취방연애 #데이트 #알콩달콩 #삽질물 #캠퍼스로맨스 #현실연애 #계략 #집착 #첫사랑", l: "http://aladin.kr/p/14nIe" },
+        { t: "미케네의 목마", p: "https://drive.google.com/thumbnail?id=132XI_s2CtS5ZN0e5f-3ZuL0vQQ-w6you&sz=s4000", k: "#GL #백합 #소설 #시대물 #고대 #그리스 #신화 #미케네 #트로이전쟁 #연하공 #연상수 #비글수 #여왕공 #집착녀 #츤데레 #순정녀 #권력자 #여왕 #여전사 #혐관 #애증 #짝사랑 #후회 #피폐 #약SM #가족애 #쌍방구원 #루프물 #회귀 #시간역행 #전쟁물 #그리스 #미케네 #그리스로마신화 #미케네의목마 #목마", l: "http://aladin.kr/p/b4Nxb" },
+        { t: "애집(愛执)", p: "https://drive.google.com/thumbnail?id=1gMliwurZdfgSjnuev2hQFz_XRxqradEb&sz=s4000", k: "#현대물 #백합 #GL #동거 #첫사랑 #상처녀 #능력녀 #다정녀 #순정녀 #까칠녀 #피폐물 #삼각관계 #오해 #유혹녀 #우월녀 #털털녀 #계략녀 #소유욕 #독점욕 #질투 #스릴러 #하드코어 #첫사랑 #전문직 #직진녀 #라이벌 #양숙 #가족관계 #새언니 #시누이", l: "http://aladin.kr/p/WPH4h" }
+            ];
+
+            var vibDlg = "여기 편집장 안목이 좋다길래... 내 갈증을 채워줄 책 한 권만 내와봐요.";
+            var CUSTS = [
+                {id:0,stage:1,vib:false,name:"민서",emo:"👩‍🎓",dlg:"달콤한 동갑내기 GL이 읽고 싶어요~",req:[["#달달물","#달달"],["#동갑커플","#동갑내기"]]},
+                {id:1,stage:1,vib:false,name:"지안",emo:"🌸",dlg:"판타지 배경에서 달달한 GL이요!",req:[["#판타지물"],["#달달","#달달물","#힐링물","#로맨틱코미디"]]},
+                {id:2,stage:1,vib:false,name:"소율",emo:"🧟",dlg:"좀비나 재난 속에서 피어나는 사랑 GL이요",req:[["#좀비물","#포스트아포칼립스","#좀비","#좀비아포칼립스","#재난"]]},
+                {id:3,stage:1,vib:false,name:"하윤",emo:"🏫",dlg:"대학교나 캠퍼스 배경 GL이요",req:[["#캠퍼스로맨스","#대학생","#대학교"]]},
+                {id:4,stage:1,vib:false,name:"나은",emo:"💼",dlg:"직장 배경 오피스 GL이요",req:[["#오피스물","#사내연애","#직장상사","#상사"]]},
+                {id:5,stage:1,vib:false,name:"예리",emo:"📜",dlg:"역사물이나 시대물 GL 찾고 있어요",req:[["#시대물","#역사물","#가상시대물","#일제강점기","#조선시대","#조선","#고대"]]},
+                {id:6,stage:1,vib:false,name:"수아",emo:"💘",dlg:"짝사랑이 이루어지는 달달한 GL이요",req:[["#짝사랑"],["#달달","#달달물"]]},
+                {id:7,stage:1,vib:true,name:"VIB",emo:"🕶️",dlg:vibDlg,req:[]},
+                {id:8,stage:2,vib:false,name:"지현",emo:"📺",dlg:"연예계나 방송 배경 GL이요",req:[["#연예계","#연예계물","#방송계","#방송국","#아이돌","#가수"]]},
+                {id:9,stage:2,vib:false,name:"민아",emo:"⚡",dlg:"SF나 초능력 요소 있는 GL이요",req:[["#SF","#초능력","#이능력","#가이드버스","#센티넬버스","#컬러버스","#헌터"]]},
+                {id:10,stage:2,vib:false,name:"유나",emo:"🌿",dlg:"서로 상처를 치유하며 구원하는 GL이요",req:[["#쌍방구원","#힐링물","#힐링"]]},
+                {id:11,stage:2,vib:false,name:"채린",emo:"💍",dlg:"정략결혼이나 계약으로 시작하는 GL이요",req:[["#정략결혼","#계약관계","#선결혼후연애"]]},
+                {id:12,stage:2,vib:false,name:"다인",emo:"⏳",dlg:"오랫동안 헤어졌다가 다시 만나는 재회 GL이요",req:[["#재회"]],exc:["#피폐물","#느와르","#근친물"]},
+                {id:13,stage:2,vib:false,name:"세나",emo:"🔥",dlg:"집착하거나 독점욕 강한 캐릭터 나오는 GL이요",req:[["#집착","#집착공","#집착녀","#독점욕","#독점욕/질투"]]},
+                {id:14,stage:2,vib:false,name:"아린",emo:"🤫",dlg:"비밀연애나 숨겨야 하는 연애 GL이요",req:[["#비밀연애","#몰래연애"]]},
+                {id:15,stage:2,vib:true,name:"VIB",emo:"🕶️",dlg:vibDlg,req:[]},
+                {id:16,stage:3,vib:false,name:"은하",emo:"🌑",dlg:"피폐물이나 트라우마 있는 어두운 GL이요",req:[["#피폐물","#트라우마","#애증"]]},
+                {id:17,stage:3,vib:false,name:"시은",emo:"🕵️",dlg:"느와르나 범죄 분위기 GL이요",req:[["#느와르","#범죄물","#뒷세계","#스릴러"]]},
+                {id:18,stage:3,vib:false,name:"루아",emo:"🌱",dlg:"성장 서사가 깊은 GL이요, 캐릭터가 많이 변하는",req:[["#성장물","#성장"]]},
+                {id:19,stage:3,vib:false,name:"새봄",emo:"🚫",dlg:"허락되지 않는 어두운 사랑... 금단의 감정이요",req:[["#피폐물","#금단의관계","#배덕","#BDSM","#근친물","#SM플레이"]]},
+                {id:20,stage:3,vib:false,name:"이담",emo:"💫",dlg:"짝사랑 끝에 오랜 시간 지나 재회하는 GL이요",req:[["#재회"],["#짝사랑","#첫사랑"]]},
+                {id:21,stage:3,vib:false,name:"하라",emo:"💎",dlg:"재벌이나 부잣집 여자 나오는 달달한 GL이요",req:[["#재벌녀","#영앤리치","#금수저"],["#달달","#달달물","#로맨틱코미디"]]},
+                {id:22,stage:3,vib:false,name:"세인",emo:"🎓",dlg:"고등학교 배경 청춘 GL이요, 풋풋하게!",req:[["#하이스쿨로맨스","#고등학생","#하이틴로맨스"]]},
+                {id:23,stage:3,vib:true,name:"VIB",emo:"🕶️",dlg:vibDlg,req:[]}
+            ];
+
+            window.DALBIC = {
+                S: { ci: 0, sc: 0, ok: 0, time: 40, sel: null, tm: null, hist: [], pool: [], vS: new Set() },
+                shuf: function(a){ return a.slice().sort(function(){return Math.random()-0.5;}); },
+                getTags: function(k) { return new Set((k.match(/#[^\s#,]+/g)||[])); },
+                hasAny: function(ts, a) { return a.some(function(t){ return ts.has(t); }); },
+                isOk: function(book, c) {
+                    if(c.vib) return true;
+                    if(!c.req) return true;
+                    var ts = this.getTags(book.k);
+                    if(!c.req.every(function(g){ return DALBIC.hasAny(ts, g); })) return false;
+                    if(c.exc && c.exc.length && this.hasAny(ts, c.exc)) return false;
+                    return true;
+                },
+                start: function(){
+                    var vibNames = ["미결","백또술","서원","책도둑","에뗄","자몽과라임","정관사","스노바G","율교","라베원","만년설","야금","루로레","해뜬날","스위트구스","차연조","야야","초록나무샘","르마아","76SY","홍조","Tictac","백식빵"];
+                    var shuffledVibs = this.shuf(vibNames);
+                    CUSTS.forEach(function(c) { if(c.vib) c.name = shuffledVibs.pop(); });
+                    var s1 = this.shuf(CUSTS.filter(function(v){return v.stage===1;}));
+                    var s2 = this.shuf(CUSTS.filter(function(v){return v.stage===2;}));
+                    var s3 = this.shuf(CUSTS.filter(function(v){return v.stage===3;}));
+                    this.S.pool = [].concat(s1.slice(0,3), s2.slice(0,4), s3.slice(0,3));
+                    document.getElementById('dl-v-intro').classList.remove('active');
+                    document.getElementById('dl-v-game').classList.add('active');
+                    this.turn();
+                },
+                turn: function(){
+                    var c = this.S.pool[this.S.ci];
+                    var stNames = ["","직구형","묘사형","감성형"];
+                    var bdg = document.getElementById('dl-stg');
+                    bdg.innerText = stNames[c.stage]+' · Stage '+c.stage;
+                    bdg.className = "st-badge st-"+c.stage;
+                    document.getElementById('dl-pg').innerText = (this.S.ci+1)+"/10";
+                    document.getElementById('dl-pb-fill').style.width = ((this.S.ci/10)*100)+'%';
+                    var emBox = document.getElementById('dl-em');
+                    var nmBox = document.getElementById('dl-nm');
+                    var vbTag = document.getElementById('dl-vb-tag');
+                    var vbMsg = document.getElementById('dl-vib-msg');
+                    if(c.vib){ emBox.classList.add('vib-glow-pnl'); vbTag.style.display='inline-block'; nmBox.innerHTML='<span style="color:#ffcc00;font-size:11px;">'+c.name+'</span>'; vbMsg.style.display='block'; }
+                    else { emBox.classList.remove('vib-glow-pnl'); vbTag.style.display='none'; nmBox.innerText=c.name; vbMsg.style.display='none'; }
+                    emBox.innerText = c.emo;
+                    document.getElementById('dl-dl').innerText = '"'+c.dlg+'"';
+                    var gridPool = [];
+                    if(c.vib){ gridPool=this.shuf(W).slice(0,12); this.S.vS=new Set(gridPool.map(function(b){return b.t;})); }
+                    else {
+                        var pass=W.filter(function(b){return DALBIC.isOk(b,c);});
+                        var fail=W.filter(function(b){return !DALBIC.isOk(b,c);});
+                        var pPass=this.shuf(pass).slice(0,5); var pFail=this.shuf(fail).slice(0,12-pPass.length);
+                        gridPool=this.shuf([].concat(pPass,pFail));
+                        this.S.vS=new Set(pPass.map(function(b){return b.t;}));
+                    }
+                    var gd=document.getElementById('dl-gd'); gd.innerHTML='';
+                    gridPool.forEach(function(b){
+                        var el=document.createElement('div'); el.className='book-item'; el.dataset.t=b.t;
+                        el.innerHTML='<div class="img-box"><img src="'+b.p+'" onerror="this.style.opacity=0.3"><div class="bvi">✨</div></div><div class="book-t">'+b.t+'</div>';
+                        el.onclick=function(){ DALBIC.pick(b,el); };
+                        gd.appendChild(el);
+                    });
+                    this.S.sel=null; this.S.time=40;
+                    document.getElementById('dl-msg').innerHTML="책을 선택하세요";
+                    document.getElementById('dl-btn').disabled=true;
+                    this.timer();
+                },
+                pick: function(b,el){
+                    if(document.getElementById('dl-v-fb').classList.contains('active')) return;
+                    var all=document.querySelectorAll('.book-item');
+                    for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
+                    el.classList.add('sel'); this.S.sel=b;
+                    document.getElementById('dl-msg').innerHTML='선택: <span style="color:#ffcc00;font-weight:900;">「'+b.t+'」</span>';
+                    document.getElementById('dl-btn').disabled=false;
+                },
+                timer: function(){
+                    clearInterval(this.S.tm);
+                    var el=document.getElementById('dl-tm'); el.innerText=this.S.time; el.classList.remove('danger');
+                    this.S.tm=setInterval(function(){
+                        DALBIC.S.time--; el.innerText=DALBIC.S.time;
+                        if(DALBIC.S.time<=10) el.classList.add('danger');
+                        if(DALBIC.S.time<=0){ clearInterval(DALBIC.S.tm); DALBIC.confirm(true); }
+                    },1000);
+                },
+                confirm: function(tout){
+                    clearInterval(this.S.tm);
+                    var c=this.S.pool[this.S.ci];
+                    var ok=!tout&&this.S.sel&&this.isOk(this.S.sel,c);
+                    var ov=document.getElementById('dl-v-fb');
+                    this.S.hist.push({ok:ok,c:c,b:this.S.sel});
+                    if(ok){ this.S.sc+=(100+this.S.time*2); this.S.ok++; document.getElementById('fb-h').innerText="완벽한 큐레이션!"; document.getElementById('fb-ico').innerText="✨"; document.getElementById('fb-h').style.color="#4ade80"; document.getElementById('fb-s').innerText=""; }
+                    else if(tout){ document.getElementById('fb-h').innerText="시간 초과!"; document.getElementById('fb-ico').innerText="⏰"; document.getElementById('fb-h').style.color="#facc15"; document.getElementById('fb-s').innerText=""; }
+                    else { this.S.sc=Math.max(0,this.S.sc-30); document.getElementById('fb-h').innerText="아쉽네요..."; document.getElementById('fb-ico').innerText="💔"; document.getElementById('fb-h').style.color="#f87171"; document.getElementById('fb-s').innerText="다른 책이었나봐요."; }
+                    document.getElementById('dl-sc').innerText="✨ "+this.S.sc.toLocaleString();
+                    var all=document.querySelectorAll('.book-item');
+                    for(var i=0;i<all.length;i++){
+                        var bt=all[i].dataset.t;
+                        if(DALBIC.S.vS.has(bt)) all[i].classList.add('vr');
+                        else if(this.S.sel&&bt===this.S.sel.t&&!ok) all[i].classList.add('wr');
+                        else if(this.S.sel&&bt!==this.S.sel.t) all[i].classList.add('dm');
+                    }
+                    document.getElementById('dl-btn').disabled=true;
+                    ov.classList.add('active');
+                    setTimeout(function(){ ov.classList.remove('active'); if(DALBIC.S.ci>=9) DALBIC.result(); else { DALBIC.S.ci++; DALBIC.turn(); } }, ok?1500:2200);
+                },
+                result: function(){
+                    document.getElementById('dl-v-game').classList.remove('active');
+                    document.getElementById('dl-v-res').classList.add('active');
+                    document.getElementById('res-score').innerText=this.S.sc.toLocaleString();
+                    document.getElementById('res-count').innerText=this.S.ok+"/10 큐레이션 성공";
+                    var vibs=[];
+                    this.S.hist.forEach(function(h){ if(h.c.vib&&h.ok&&vibs.indexOf(h.c.name)===-1) vibs.push(h.c.name); });
+                    var kws={}, sk=new Set(["#GL","#백합","#GL/백합","#현대물","#소설","#사회인","#직장인"]);
+                    this.S.hist.filter(function(h){return h.b;}).forEach(function(h){
+                        var tags=h.b.k.match(/#[^\s#,]+/g)||[];
+                        tags.forEach(function(k){ if(!sk.has(k)) kws[k]=(kws[k]||0)+1; });
+                    });
+                    var topKw=Object.entries(kws).sort(function(a,b){return b[1]-a[1];});
+                    var top1=topKw.length>0?topKw[0][0]:"#키워드없음";
+                    var top2=topKw.length>1?topKw[1][0]:"#키워드없음";
+                    var bFreq={};
+                    this.S.hist.filter(function(h){return h.b;}).forEach(function(h){ bFreq[h.b.t]=(bFreq[h.b.t]||0)+1; });
+                    var topBks=Object.entries(bFreq).sort(function(a,b){return b[1]-a[1];}).slice(0,2);
+                    var topB1=topBks.length>0?W.find(function(w){return w.t===topBks[0][0];}):null;
+                    var topB2=topBks.length>1?W.find(function(w){return w.t===topBks[1][0];}):null;
+                    var vibText=vibs.length>0?'우리 매장을 비밀리에 방문한 <span style="color:#ffcc00;font-weight:bold;">['+vibs.join(', ')+']</span> 작가님에게도 만족스러운 큐레이션을 선사했다.<br><br>':'';
+                    var bkText=(topB1?'['+topB1.t+']':'')+(topB2?'과 ['+topB2.t+']':'');
+                    if(!bkText) bkText='[선택한 작품 없음]';
+                    var linkHtml='';
+                    if(topB1&&topB1.l) linkHtml+='<a href="'+topB1.l+'" target="_blank" class="link-btn">📖 '+topB1.t+' 보러가기</a>';
+                    if(topB2&&topB2.l) linkHtml+='<a href="'+topB2.l+'" target="_blank" class="link-btn">📖 '+topB2.t+' 보러가기</a>';
+                    var reportHtml='<p style="font-size:12px;color:#fff;line-height:1.7;text-align:left;padding:14px;background:rgba(0,0,0,0.4);border-radius:8px;margin-bottom:12px;font-weight:500;word-break:keep-all;">오늘 10명의 독자에게 <span style="color:#ffcc00;font-weight:bold;">'+top1+'</span>의 향기가 나는 책들을 주로 건넸다.<br><br>'+vibText+'내가 무의식중에 가장 많이 집어 든 책은 <span style="color:#4ade80;font-weight:bold;">'+bkText+'</span>(이)었다.<br><br>분석 결과, 나는 <span style="color:#ffcc00;font-weight:bold;">'+top1+'</span>(과)와 <span style="color:#ffcc00;font-weight:bold;">'+top2+'</span>이(가) 적절히 버무려진 이야기를 좋아하는 <strong>\'본능적 감각\'</strong>의 편집장이었다.</p><div style="text-align:center;">'+linkHtml+'</div>';
+                    document.getElementById('res-report-content').innerHTML=reportHtml;
+                    document.getElementById('res-history').innerHTML=this.S.hist.map(function(h){
+                        return '<div class="h-line"><span style="color:'+(h.ok?'#4ade80':'#f87171')+';font-weight:bold;">'+(h.ok?'✓':'✗')+'</span><span style="color:#fff;min-width:45px;font-weight:bold;">'+h.c.name+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:'+(h.ok?'#ffcc00':'#a0a0a0')+';font-weight:bold;">'+(h.b?'→ 「'+h.b.t+'」':'→ 시간초과')+'</span>'+(h.c.vib?'<span style="color:#ffcc00;font-size:11px;font-weight:900;">VIB✨</span>':'')+'</div>';
+                    }).join('');
+                }
+            };
+        })();
+</script>
 </body>
 </html>

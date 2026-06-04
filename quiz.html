@@ -3,23 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>취향매칭테스트 | 달빛출판사</title>
+<title>취향매칭테스트(GL) | 달빛출판사</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+    :root { --deep-navy: #0f172a; --moon-gold: #d4af37; --soft-bg: #f8fafc; --text-main: #1e293b; --text-sub: #475569; }
+    .matching-container { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: 0 auto; padding: 60px 20px 100px; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    .nav-header { margin-bottom: 30px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #bbb; text-decoration: none !important; font-size: 13px; letter-spacing: 0.5px; transition: 0.3s; }
+    .back-link:hover { color: var(--deep-navy); }
+    .matching-title-wrap { text-align: left; max-width: 800px; margin: 0 auto 80px; }
+    .eng-title { font-size: 32px; font-weight: 700; color: #111; letter-spacing: -0.5px; line-height: 1.4; word-break: keep-all; }
+    .quiz-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 80px 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); min-height: 520px; position: relative; overflow: hidden; margin-bottom: 50px; }
+    .progress-bar-bg { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: #eee; }
+    .progress-bar-fill { height: 100%; background: var(--deep-navy); width: 0%; transition: width 0.3s; }
+    .q-box { display: none; text-align: center; }
+    .q-box.active { display: block !important; animation: fadeIn 0.5s; }
+    .q-num { color: var(--moon-gold); font-weight: 700; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px; }
+    .q-text { font-family: 'Noto Serif KR', serif; font-size: 26px; font-weight: 700; margin-bottom: 50px; line-height: 1.5; word-break: keep-all; color: var(--deep-navy); }
+    .ans-btn { display: block; width: 100%; padding: 20px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; font-size: 16px; cursor: pointer; transition: 0.3s; text-align: left; font-family: 'Noto Sans KR', sans-serif; color: var(--text-sub); }
+    .ans-btn:hover { background: var(--soft-bg); border-color: var(--deep-navy); transform: translateX(8px); color: var(--deep-navy); }
+    #result-area { display: none; text-align: left; padding-top: 20px; animation: fadeIn 0.8s; }
+    .result-header { text-align: center; margin-bottom: 60px; }
+    .user-analysis { display: inline-block; background: var(--deep-navy); color: #fff !important; padding: 12px 28px; border-radius: 50px; font-size: 18px; margin-bottom: 30px; font-weight: 700; box-shadow: 0 5px 15px rgba(15,23,42,0.15); }
+    .result-header h3 { font-family: 'Noto Serif KR', serif; font-size: 32px; color: var(--deep-navy); margin-bottom: 15px; font-weight: 700; }
+    .result-header p { font-size: 15px; color: var(--text-sub); }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 60px; }
+    .res-card { display: flex; gap: 20px; background: #fff; border: 2px solid #f1f5f9; padding: 20px; border-radius: 20px; transition: 0.3s; text-decoration: none !important; color: inherit; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .res-card:hover { transform: translateY(-5px); border-color: var(--moon-gold); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .res-img { width: 105px; height: 150px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+    .res-info { flex: 1; }
+    .res-name { font-weight: 700; font-size: 20px; margin-bottom: 10px; color: #111; font-family: 'Noto Serif KR', serif; }
+    .res-tags { font-size: 13px; color: #4a7ab5; line-height: 1.6; font-weight: 300; }
+    .retry-btn { display: block; width: 180px; margin: 0 auto; padding: 14px; border: 1px solid #ddd; border-radius: 12px; color: #777 !important; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; }
+    .retry-btn:hover { background: #eee; color: #333 !important; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 767px) { .result-grid { grid-template-columns: 1fr; gap: 15px; } .quiz-card { padding: 50px 20px; } .q-text { font-size: 20px; } .result-header h3 { font-size: 26px; } }
+</style>
 </head>
 <body>
 <aside class="sidebar" id="sidebar"></aside>
 <div class="main-wrap">
-  <div class="content">
-    <a href="works.html" class="quiz-back">← LIST</a>
-    <p style="font-size:15px;color:#555;margin-bottom:4px;">달빛출판사의 작품 중</p>
-    <h2 style="font-size:22px;font-weight:700;margin-bottom:32px;">당신의 인생작을 찾아보세요</h2>
-    <div class="quiz-card">
-      <div class="quiz-q-label">QUESTION 1</div>
-      <div class="quiz-question">오늘 당신의 연애 세포는 어떤 상태인가요?</div>
-      <button class="quiz-option">싱그러운 설렘이 필요해</button>
-      <button class="quiz-option">어른들의 농밀한 연애가 보고 싶어</button>
-      <button class="quiz-option">판타지 같은 특별한 만남</button>
-      <button class="quiz-option">가슴 저린 서사가 좋아</button>
+  <div class="matching-container">
+    <div class="nav-header"><a href="works.html" class="back-link"><i class="fas fa-chevron-left"></i> LIST</a></div>
+    <div class="matching-title-wrap"><div class="eng-title">달빛출판사의 작품 중<br>당신의 인생작을 찾아보세요</div></div>
+    <div class="quiz-card" id="quiz-card">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+        <div id="quiz-contents"></div>
+    </div>
+    <div id="result-area">
+        <div class="result-header">
+            <div id="analysis-text" class="user-analysis"></div>
+            <h3>당신의 취향 저격 리스트</h3>
+            <p>매칭률이 가장 높은 달빛출판사 GL 작품입니다.</p>
+        </div>
+        <div class="result-grid" id="result-grid"></div>
+        <a href="javascript:void(0)" class="retry-btn" onclick="location.reload()">테스트 다시하기</a>
     </div>
   </div>
   <footer>
@@ -34,5 +74,137 @@
 </div>
 <script src="sidebar.js"></script>
 <script>renderSidebar('quiz');</script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    const worksData = [
+        { t: "십 분의 오", p: "https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo", k: "#현대물 #로맨틱코미디 #오피스물 #방송계", l: "http://aladin.kr/p/JS2Ej" },
+        { t: "예외의 법칙", p: "https://lh3.googleusercontent.com/d/1hFg73VHwiCxB_iSmF056916idyL9gluq", k: "#현대물 #오피스물 #일상물 #사회인", l: "https://ridibooks.com/books/4614000145" },
+        { t: "어떤 우정은", p: "https://lh3.googleusercontent.com/u/0/d/10AG2cGm383jzxd3XoCSn0sUkN7T4nDu1", k: "#현대물 #학원물 #친구>연인 #달달물", l: "https://t.co/h2NeCr6drn" },
+        { t: "시한부 공녀님의 마지막 여행", p: "https://drive.google.com/thumbnail?id=18KIb0BBPGwgp9YG6n6pC3qJQyjxL36Bq&sz=s4000", k: "#판타지물 #서양풍 #시한부", l: "https://ridibooks.com/books/4614000140" },
+        { t: "솔티드 카라멜 초콜릿", p: "https://drive.google.com/thumbnail?id=1XMZzlLelebd4ubjqOAf3qVnZszcn0RZi&sz=s4000", k: "#현대물 #연하공 #직진녀 #달달", l: "https://ridibooks.com/books/4614000139" },
+        { t: "오류 해결을 바라신다면", p: "https://drive.google.com/thumbnail?id=1YAL2aAanD03L3G4nCrRoOP_S3MKpQNdL&sz=s4000", k: "#현대물 #센티넬버스 #가이드버스", l: "https://ridibooks.com/books/4614000134" },
+        { t: "다시는 사랑에 빠지지 않는 방법", p: "https://drive.google.com/thumbnail?id=1R4SNxZUP47oWzi65Mlvv2gtNwougZ61B&sz=s4000", k: "#현대물 #연예계물 #걸그룹 #직진공", l: "https://ridibooks.com/books/4614000132" },
+        { t: "수상한 최 과장", p: "https://drive.google.com/thumbnail?id=1l6Rcc0MxmJPk2VeYREhRe54Fr5LjxlsG&sz=s4000", k: "#현대물 #오피스물 #사내연애 #연상공", l: "https://ridibooks.com/books/4614000125" },
+        { t: "이름 없는 기억", p: "https://drive.google.com/thumbnail?id=15269j6eaNYzEMBQcNdkGAaVGu6Rmcc0L&sz=s4000", k: "#현대물 #학원물 #기억상실 #재회", l: "https://ridibooks.com/books/4614000121" },
+        { t: "나를 경멸하는 당신에게 바치는 연서", p: "https://drive.google.com/thumbnail?id=1imzykkGzxZyN3Yq6oHxsAIEwCTnsEP5S&sz=s4000", k: "#판타지물 #서양풍 #기사 #후회녀", l: "https://ridibooks.com/books/4614000103" },
+        { t: "김산산전", p: "https://drive.google.com/thumbnail?id=1hpOOrxZG_7sj5S8zIsMYeRqRednTdTEQ&sz=s4000", k: "#시대물 #동양풍 #조선 #이능력", l: "https://ridibooks.com/books/4614000118" },
+        { t: "완벽한 계획에 그녀들이란 변수", p: "https://drive.google.com/thumbnail?id=1vTYzJgJd_UI0-t9eJFjKv0rYaQofaWlM&sz=s4000", k: "#현대물 #연예계 #삼각관계 #직진녀", l: "https://ridibooks.com/books/4614000035" },
+        { t: "몇 번이나 바랐을까", p: "https://drive.google.com/thumbnail?id=1HQEoVXE5Hp9Sgb9qkb4UfnsB88DLW4dp&sz=s4000", k: "#현대물 #느와르 #경찰 #고수위", l: "https://ridibooks.com/books/4614000113" },
+        { t: "여름의 숲은 푸르다", p: "https://drive.google.com/thumbnail?id=1BaNwRnFiyLvn_ogpHtYl7skzqaQxl2tS&sz=s4000", k: "#현대물 #정략결혼 #직진공", l: "https://ridibooks.com/books/4614000111" },
+        { t: "암실", p: "https://drive.google.com/thumbnail?id=1dv1D7ado-EtVBzCKjRAMYG-8CUWbNs9T&sz=s4000", k: "#현대물 #느와르 #수사물 #피폐", l: "https://ridibooks.com/books/4614000108" },
+        { t: "마치 기적과도 같은", p: "https://drive.google.com/thumbnail?id=17y8LsXQDJX4HRKmTtXMmz_ouP1uYAuWd&sz=s4000", k: "#현대물 #판타지물 #임신수 #힐링물", l: "https://ridibooks.com/books/4614000098" },
+        { t: "어쩔 수 없는 것", p: "https://drive.google.com/thumbnail?id=1vsXBkhvmm9iPrHUlPMYQi20JZc5w5kaW&sz=s4000", k: "#현대물 #피폐물 #근친물 #배덕", l: "https://ridibooks.com/books/4614000094" },
+        { t: "전개가 바뀌지 않아서 장르를 바꾸려고 합니다", p: "https://drive.google.com/thumbnail?id=1xa7UGD3mzr0CU2gWLu8ATZ9vMz_Yxvqn&sz=s4000", k: "#판타지물 #서양풍 #계약관계", l: "https://ridibooks.com/books/4614000030" },
+        { t: "엘리, 그 지긋지긋한 새끼", p: "https://drive.google.com/thumbnail?id=1JMD7ryaTzauOczi4K2XvztWsAtk65cAV&sz=s4000", k: "#현대물 #학원물 #소꿉친구 #집착녀", l: "https://ridibooks.com/books/4614000090" },
+        { t: "열애소설", p: "https://drive.google.com/thumbnail?id=1L-yTOTs-yhu0wiufwQGxqDyg6n0kM4m6&sz=s4000", k: "#시대물 #역사물 #일제강점기 #재회", l: "https://ridibooks.com/books/4614000088" },
+        { t: "근원? 근심!", p: "https://drive.google.com/thumbnail?id=12xSB3y9OvtGfriICumyKT0S5cxPNCYf-&sz=s4000", k: "#현대물 #게임물 #로코 #달달", l: "https://ridibooks.com/books/4614000085" },
+        { t: "물 만난 언니", p: "https://drive.google.com/thumbnail?id=1xnjNaLvbpUowmmiRBorbycO4J64GaXgk&sz=s4000", k: "#현대물 #일상물 #걸크러시 #힐링", l: "https://ridibooks.com/books/4614000083" },
+        { t: "네 남편의 조건", p: "https://drive.google.com/thumbnail?id=1aefBCpoctJzE-rMKpg9NFyB295uQPkAV&sz=s4000", k: "#현대물 #BDSM #고수위 #펨돔", l: "https://ridibooks.com/books/4614000080" },
+        { t: "이제 가족이 되겠습니다", p: "https://drive.google.com/thumbnail?id=1bX-DeraY6swm9-cEaqmfiR-WKNalT3sz&sz=s4000", k: "#시대물 #서양풍 #여왕공 #집착공", l: "https://ridibooks.com/books/4614000078" },
+        { t: "호감도가 보이기 시작했다", p: "https://drive.google.com/thumbnail?id=1eLt-piO0yQu4Sqhs003isHjyBwrzJjaq&sz=s4000", k: "#현대물 #판타지물 #헌터 #액션", l: "https://ridibooks.com/books/4614000063" },
+        { t: "두 번째 첫사랑", p: "https://drive.google.com/thumbnail?id=1PocYjb7h0a2hTE37sW5ZIkO41k3_61wp&sz=s4000", k: "#현대물 #재회 #첫사랑 #짝사랑", l: "https://ridibooks.com/books/4614000075" },
+        { t: "비커밍 엑스", p: "https://drive.google.com/thumbnail?id=1OEEMSGWBn04pGxNcB6XqbMTcxfE53qi-&sz=s4000", k: "#SF #가이드버스 #초능력 #액션", l: "https://ridibooks.com/books/4614000072" },
+        { t: "하멜른의 피리", p: "https://drive.google.com/thumbnail?id=1CuAPSpCPG0SJduuvLHHDz0ZSD_w9lzPa&sz=s4000", k: "#좀비물 #포스트아포칼립스 #액션", l: "https://ridibooks.com/books/4614000070" },
+        { t: "백구야, 이리 와", p: "https://drive.google.com/thumbnail?id=1TP33N8deoj02grRxlNjj7qrTL0t7hjO-&sz=s4000", k: "#현대물 #오피스물 #사내연애 #달달", l: "https://ridibooks.com/books/4614000067" },
+        { t: "코스믹라떼", p: "https://drive.google.com/thumbnail?id=1aVL7zp3Q_ji8yxpFyV2TWnkAHbrdd-tm&sz=s4000", k: "#연예인 #아이돌 #비밀연애 #달달", l: "https://ridibooks.com/books/4614000061" },
+        { t: "라스트 트래블", p: "https://drive.google.com/thumbnail?id=1Ac8UP80rWqqn39_-C1wH3rd6RN5UnUC6&sz=s4000", k: "#판타지물 #이세계 #차원이동 #황제", l: "https://ridibooks.com/books/4614000059" },
+        { t: "옆에 누워요", p: "https://drive.google.com/thumbnail?id=1cCZmrvcFTlEr3CZ5j-fvYWZScRQZYBnQ&sz=s4000", k: "#현대물 #수험생 #선생님 #연하공", l: "https://ridibooks.com/books/4614000054" },
+        { t: "윗치 퍼펙트", p: "https://drive.google.com/thumbnail?id=1_SGcqIOf3jCnMFNpCMB_pUSbUp6ctjXq&sz=s4000", k: "#현대물 #로코 #마녀 #능력자", l: "https://ridibooks.com/books/4614000049" },
+        { t: "true romance", p: "https://drive.google.com/thumbnail?id=1Sn1xzwu7FmTL3FNTkEFqt4WoUOo6sluS&sz=s4000", k: "#현대물 #캠퍼스물 #첫사랑 #재회", l: "https://ridibooks.com/books/4614000038" },
+        { t: "고르디우스의 굴레", p: "https://drive.google.com/thumbnail?id=1nvn9o4Lh5c0ze6sJmOUkxwUFGhDZfo3g&sz=s4000", k: "#시대물 #역사물 #전쟁물 #서양풍", l: "https://ridibooks.com/books/4614000024" },
+        { t: "시급", p: "https://drive.google.com/thumbnail?id=1oPc12gxVd2MpH29qZIjLOGqvpeaVnvdp&sz=s4000", k: "#가이드버스 #센티넬 #후회공", l: "https://ridibooks.com/books/4614000028" },
+        { t: "어느 외눈박이에게", p: "https://drive.google.com/thumbnail?id=1mgKaRywzvWmLFxqTHLMQHgLev-Xp4wIM&sz=s4000", k: "#현대물 #SF #컬러버스 #구원", l: "https://t.co/9b617jBwyd" },
+        { t: "시시때때로", p: "https://drive.google.com/thumbnail?id=1yhcPw9p5o1pHVrXp0PnsLdm0DI8KhDWs&sz=s4000", k: "#현대물 #SF #시간여행 #혐관", l: "https://ridibooks.com/books/4614000010" },
+        { t: "가장 완벽한 고백의 밤", p: "https://drive.google.com/thumbnail?id=1cr7wOPCNJ-BXIEdOgE6oCAS49VApJuPp&sz=s4000", k: "#좀비물 #캠퍼스물 #사지생존 #짝사랑", l: "https://ridibooks.com/books/4614000033" },
+        { t: "사랑이 스미는 중", p: "https://drive.google.com/thumbnail?id=181wWH-H0PMutyu27Q63tUuhP83k1vfw4&sz=s4000", k: "#현대물 #작가 #소설 #재회 #달달", l: "https://ridibooks.com/books/4614000031" },
+        { t: "첫사랑", p: "https://drive.google.com/thumbnail?id=1WmEi8zhCaYihaH_2X6Aam5DSvWyfM0kf&sz=s4000", k: "#현대물 #학원물 #첫사랑 #따돌림", l: "https://ridibooks.com/books/4614000027" },
+        { t: "첫사랑 고득점 N제", p: "https://drive.google.com/thumbnail?id=1IZlfh92ogWkkIph4PV5WgPt21m59awIO&sz=s4000", k: "#학원물 #소꿉친구 #달달물 #입시", l: "https://ridibooks.com/books/4614000020" },
+        { t: "그해 여름", p: "https://drive.google.com/thumbnail?id=1PcfmsWIi4rJk4km3Iv4TMIu6_ZOPCBeZ&sz=s4000", k: "#현대물 #사제관계 #교생 #학원물", l: "https://ridibooks.com/books/4614000018" },
+        { t: "첫사랑 작동법", p: "https://drive.google.com/thumbnail?id=1xZFk6RB_MNRaaEdNfCau2JmyZABroWbm&sz=s4000", k: "#캠퍼스물 #선후배 #달달 #일상", l: "https://ridibooks.com/v2/search?q=첫사랑 작동법" },
+        { t: "밤과 밤", p: "https://drive.google.com/thumbnail?id=1MR5FwYCVg7AhXPJ_7BdETCvxFOMgQ-e4&sz=s4000", k: "#캠퍼스물 #친구>연인 #비밀연애", l: "https://ridibooks.com/books/4614000005" },
+        { t: "친구 사이에", p: "https://drive.google.com/thumbnail?id=1ZVc-bBrdphRRbqOrPzKtUzYJmLyfIbPM&sz=s4000", k: "#캠퍼스물 #친구>연인 #달달", l: "https://ridibooks.com/books/4614000009" },
+        { t: "미케네의 목마", p: "https://drive.google.com/thumbnail?id=132XI_s2CtS5ZN0e5f-3ZuL0vQQ-w6you&sz=s4000", k: "#시대물 #그리스신화 #회귀물 #혐관", l: "https://ridibooks.com/books/4614000002" },
+        { t: "애집(愛執)", p: "https://drive.google.com/thumbnail?id=1gMliwurZdfgSjnuev2hQFz_XRxqradEb&sz=s4000", k: "#첫사랑 #재회 #애증 #집착 #스릴러", l: "https://ridibooks.com/books/4614000001" }
+    ];
+
+    const questions = [
+        { q: "오늘 당신의 연애 세포는 어떤 상태인가요?", a: [{t: "싱그러운 설렘이 필요해", k: "#학원물"}, {t: "어른들의 농밀한 연애가 보고 싶어", k: "#오피스물"}, {t: "판타지 같은 특별한 만남", k: "#판타지물"}, {t: "가슴 저린 서사가 좋아", k: "#애잔"}] },
+        { q: "두 사람의 관계, 어떤 시작이 더 끌리나요?", a: [{t: "십여 년 지기의 아슬아슬한 변화", k: "#친구>연인 #소꿉친구"}, {t: "지독하게 얽힌 운명적 만남", k: "#재회 #첫사랑"}, {t: "처음 본 순간 빠져드는 직진", k: "#직진"}, {t: "비즈니스로 시작된 사이", k: "#계약관계"}] },
+        { q: "가장 선호하는 배경은 어디인가요?", a: [{t: "평범하고 공감 가는 현실 현대물", k: "#현대물"}, {t: "웅장한 서사가 있는 서양/동양풍", k: "#시대물"}, {t: "미래나 이능력이 있는 특수 배경", k: "#SF #센티넬버스"}, {t: "치열하고 화려한 연예계", k: "#연예계"}] },
+        { q: "주인공의 성격 중 하나를 고른다면?", a: [{t: "지켜주고 싶은 상처 많은 사람", k: "#상처녀 #상처수"}, {t: "나를 리드해 줄 능력 있는 사람", k: "#능력녀 #걸크러시"}, {t: "애교 많고 귀여운 연하", k: "#연하공"}, {t: "다정하고 헌신적인 연상", k: "#연상공"}] },
+        { q: "고백의 스타일, 당신의 취향은?", a: [{t: "진한 진심을 담은 긴 짝사랑", k: "#짝사랑"}, {t: "앞뒤 안 재고 달려드는 불도저", k: "#직진녀"}, {t: "서서히 스며드는 일상 속 고백", k: "#일상"}, {t: "거부할 수 없는 집착 섞인 고백", k: "#집착"}] },
+        { q: "사랑의 '맛'을 고른다면?", a: [{t: "입안 가득 달콤한 설탕맛", k: "#달달"}, {t: "여운이 길게 남는 단짠 삽질", k: "#오해"}, {t: "매콤하고 아찔한 고수위 맛", k: "#고수위"}, {t: "쓰디쓴 눈물의 피폐한 맛", k: "#피폐"}] },
+        { q: "작품의 분위기는 어떠면 좋을까요?", a: [{t: "햇살처럼 청량하고 밝은 느낌", k: "#로맨틱코미디"}, {t: "달빛처럼 고요하고 깊은 감성", k: "#감성 #애잔"}, {t: "긴장감 넘치는 느와르 분위기", k: "#느와르 #스릴러"}, {t: "따뜻하게 위로해 주는 힐링", k: "#힐링물"}] },
+        { q: "갈등의 농도는 어느 정도가 적당할까요?", a: [{t: "스트레스 없는 시원한 사이다", k: "#달달물"}, {t: "사건이 얽힌 치명적인 긴장감", k: "#액션 #복수"}, {t: "애증이 뒤섞인 관계의 파동", k: "#애증"}, {t: "조용히 흘러가는 잔잔한 일상", k: "#일상물"}] },
+        { q: "과거의 인연이 다시 닿는 걸 좋아하시나요?", a: [{t: "다시 만난 첫사랑 재회물", k: "#재회 #첫사랑"}, {t: "새로운 인연과의 시작", k: "#운명"}, {t: "앙숙에서 연인이 되는 과정", k: "#혐관"}, {t: "신분 차이를 극복하는 서사", k: "#신분차이"}] },
+        { q: "바라는 엔딩의 모습은?", a: [{t: "무조건 꽉 닫힌 해피엔딩", k: "#해피엔딩"}, {t: "현실적인 고민이 담긴 성장", k: "#성장물"}, {t: "서로가 서로의 구원이 되는 끝", k: "#쌍방구원"}, {t: "아련하게 가슴에 남는 결말", k: "#애잔"}] }
+    ];
+
+    let currentIdx = 0; let userPicks = [];
+    const quizContents = document.getElementById('quiz-contents');
+    const resultArea = document.getElementById('result-area');
+    const quizCard = document.getElementById('quiz-card');
+    const progressFill = document.getElementById('progress-fill');
+
+    window.nextStep = function(key) {
+        userPicks.push(key);
+        document.getElementById('q-' + currentIdx).classList.remove('active');
+        currentIdx++;
+        progressFill.style.width = (currentIdx / questions.length * 100) + '%';
+        if (currentIdx < questions.length) {
+            document.getElementById('q-' + currentIdx).classList.add('active');
+        } else {
+            showResults();
+        }
+    }
+
+    function renderQuiz() {
+        quizContents.innerHTML = '';
+        questions.forEach((q, i) => {
+            const qBox = document.createElement('div');
+            qBox.className = 'q-box'; qBox.id = 'q-' + i;
+            if(i === 0) qBox.classList.add('active');
+            let btns = q.a.map(ans => `<button class="ans-btn" onclick="nextStep('${ans.k}')">${ans.t}</button>`).join('');
+            qBox.innerHTML = `<div class="q-num">QUESTION ${i+1}</div><div class="q-text">${q.q}</div>${btns}`;
+            quizContents.appendChild(qBox);
+        });
+    }
+
+    function showResults() {
+        quizCard.style.display = 'none';
+        document.querySelector('.matching-title-wrap').style.display = 'none';
+        resultArea.style.display = 'block';
+
+        const scoredWorks = worksData.map(work => {
+            let score = 0; let matchedTags = [];
+            userPicks.forEach(pick => {
+                pick.split(' ').forEach(pk => {
+                    if (work.k.includes(pk)) { score++; if (!matchedTags.includes(pk)) matchedTags.push(pk); }
+                });
+            });
+            return { ...work, score, matchedTags };
+        });
+
+        const maxScore = Math.max(...scoredWorks.map(w => w.score));
+        const recommended = scoredWorks.filter(w => w.score > 0 && w.score >= maxScore - 1)
+                                      .sort((a, b) => b.score - a.score);
+
+        if (recommended.length > 0) {
+            const topTags = recommended[0].matchedTags.slice(0, 3).join(' ');
+            document.getElementById('analysis-text').innerText = `당신은 ${topTags} 취향이시군요!`;
+        }
+
+        document.getElementById('result-grid').innerHTML = recommended.map(res => `
+            <a href="${res.l}" target="_blank" class="res-card">
+                <img src="${res.p}" class="res-img" onerror="this.src='https://via.placeholder.com/200x280?text=Dalbit'">
+                <div class="res-info">
+                    <div class="res-name">${res.t}</div>
+                    <div class="res-tags">${res.k}</div>
+                </div>
+            </a>`).join('');
+    }
+    renderQuiz();
+});
+</script>
 </body>
 </html>
