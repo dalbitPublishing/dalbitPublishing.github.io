@@ -5,11 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.goog-te-banner-frame{display:none!important;}
+body{top:0!important;}
+.skiptranslate iframe{display:none!important;}
+.translate-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:12px;color:#888;}
+#google_translate_element select{font-size:12px;border:1px solid #ddd;border-radius:4px;padding:3px 6px;color:#555;background:#fff;cursor:pointer;outline:none;}
+</style>
 </head>
 <body>
 <aside class="sidebar" id="sidebar"></aside>
 <div class="main-wrap">
   <div class="content">
+    <!-- 자동번역 -->
+    <div class="translate-bar">
+      <span>🌐 Language</span>
+      <div id="google_translate_element"></div>
+    </div>
     <div class="intro-card">
       <p class="intro-title">We Make Dream.&nbsp; 달빛출판사입니다.</p>
       <p>어렸을 적, 친구에게 책을 하나 빌렸습니다. 썩 유명한 책도 아니고, 필력이 좋다고 소문난 책도 아니었지만 그때는 뭐가 그렇게 재밌었는지 밤이 새도록 그 책을 읽었습니다.</p>
@@ -58,5 +70,36 @@
 </div>
 <script src="sidebar.js"></script>
 <script>renderSidebar('about');</script>
+
+<!-- Google Translate 자동번역 -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ko',
+    includedLanguages: 'en,ja,zh-TW,zh-CN,th,fr,de,es,ar,vi,id',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+
+  function tryAutoTranslate() {
+    var select = document.querySelector('.goog-te-combo');
+    if (!select) { setTimeout(tryAutoTranslate, 500); return; }
+    var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    var map = {
+      'ja':'ja','ja-jp':'ja',
+      'zh-tw':'zh-TW','zh-hk':'zh-TW','zh-mo':'zh-TW',
+      'zh-cn':'zh-CN','zh-sg':'zh-CN','zh':'zh-CN',
+      'th':'th','fr':'fr','de':'de','es':'es','ar':'ar','vi':'vi','id':'id'
+    };
+    var target = map[nav] || map[nav.split('-')[0]];
+    if (target && !nav.startsWith('ko')) {
+      select.value = target;
+      select.dispatchEvent(new Event('change'));
+    }
+  }
+  setTimeout(tryAutoTranslate, 1000);
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
