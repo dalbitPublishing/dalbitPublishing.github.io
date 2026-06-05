@@ -43,6 +43,12 @@ function renderSidebar(activePage) {
         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </a>
     </div>
+    <!-- 번역 바 -->
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid #eee;">
+      <div style="font-size:11px;color:#aaa;margin-bottom:6px;">🌐 Language</div>
+      <div id="google_translate_element"></div>
+      <button id="reset-translate" onclick="resetToKorean()" style="display:none;margin-top:6px;font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 8px;background:#fff;color:#555;cursor:pointer;width:100%;">한국어 원문</button>
+    </div>
   `;
 
   // 모바일 상단 바 삽입
@@ -74,4 +80,56 @@ function renderSidebar(activePage) {
       overlay.classList.remove('visible');
     });
   }
+
+  // Google Translate 초기화 (한 번만)
+  if (!document.getElementById('gt-style')) {
+    const s = document.createElement('style');
+    s.id = 'gt-style';
+    s.textContent = '.goog-te-banner-frame{display:none!important;}body{top:0!important;}.skiptranslate iframe{display:none!important;}#google_translate_element select{font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 6px;color:#555;background:#fff;cursor:pointer;outline:none;width:100%;}';
+    document.head.appendChild(s);
+  }
+
+  if (!window._gtLoaded) {
+    window._gtLoaded = true;
+    window.googleTranslateElementInit = function() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ko',
+        includedLanguages: 'en,ja,zh-TW,zh-CN,th,fr,de,es,ar,vi,id',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+
+      function tryAutoTranslate() {
+        var select = document.querySelector('.goog-te-combo');
+        if (!select) { setTimeout(tryAutoTranslate, 500); return; }
+        var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        var map = {
+          'ja':'ja','ja-jp':'ja',
+          'zh-tw':'zh-TW','zh-hk':'zh-TW','zh-mo':'zh-TW',
+          'zh-cn':'zh-CN','zh-sg':'zh-CN','zh':'zh-CN',
+          'th':'th','fr':'fr','de':'de','es':'es','ar':'ar','vi':'vi','id':'id'
+        };
+        var target = map[nav] || map[nav.split('-')[0]];
+        if (target && !nav.startsWith('ko')) {
+          select.value = target;
+          select.dispatchEvent(new Event('change'));
+        }
+        select.addEventListener('change', function() {
+          var btn = document.getElementById('reset-translate');
+          if (btn) btn.style.display = select.value ? 'inline-block' : 'none';
+        });
+      }
+      setTimeout(tryAutoTranslate, 1000);
+    };
+
+    const sc = document.createElement('script');
+    sc.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    document.body.appendChild(sc);
+  }
+}
+
+function resetToKorean() {
+  document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+  document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; domain=' + window.location.hostname + '; path=/';
+  window.location.reload();
 }
