@@ -21,6 +21,7 @@ body{top:0!important;}
     <div class="translate-bar">
       <span>🌐 Language</span>
       <div id="google_translate_element"></div>
+      <button id="reset-translate" onclick="resetToKorean()" style="display:none;font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 8px;background:#fff;color:#555;cursor:pointer;">한국어 원문</button>
     </div>
     <div class="intro-card">
       <p class="intro-title">We Make Dream.&nbsp; 달빛출판사입니다.</p>
@@ -73,6 +74,13 @@ body{top:0!important;}
 
 <!-- Google Translate 자동번역 -->
 <script>
+
+  function resetToKorean() {
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; domain=' + window.location.hostname + '; path=/';
+    window.location.reload();
+  }
+
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'ko',
@@ -96,6 +104,11 @@ function googleTranslateElementInit() {
       select.value = target;
       select.dispatchEvent(new Event('change'));
     }
+
+    select.addEventListener('change', function() {
+      var btn = document.getElementById('reset-translate');
+      if (btn) btn.style.display = select.value ? 'inline-block' : 'none';
+    });
   }
   setTimeout(tryAutoTranslate, 1000);
 }
