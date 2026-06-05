@@ -4,7 +4,8 @@ function renderSidebar(activePage) {
     works:   'works.html',
     quiz:    'quiz.html',
     library: 'library.html',
-    contact: 'contact.html'
+    contact: 'contact.html',
+    rights:  'rights.html'
   };
   document.getElementById('sidebar').innerHTML = `
     <a href="${pages.about}" class="logo">
@@ -21,6 +22,9 @@ function renderSidebar(activePage) {
             <li class="nav-item"><a href="${pages.quiz}"    class="nav-link${activePage==='quiz'?' active':''}">취향매칭테스트(GL)</a></li>
             <li class="nav-item"><a href="${pages.library}" class="nav-link${activePage==='library'?' active':''}">달빛 라이브러리(GL)</a></li>
           </ul>
+        </li>
+        <li class="nav-item">
+          <a href="${pages.rights}" class="nav-link${activePage==='rights'?' active':''}">International Rights</a>
         </li>
         <li class="nav-item">
           <a href="${pages.contact}" class="nav-link${activePage==='contact'?' active':''}">CONTACT</a>

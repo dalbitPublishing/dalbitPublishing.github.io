@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Rights | 달빛출판사</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── Rights Page ── */
+.lang-switcher{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.lang-btn{background:none;border:1px solid #ddd;border-radius:20px;padding:5px 14px;font-size:13px;cursor:pointer;color:#555;transition:all .2s;font-family:inherit;}
+.lang-btn:hover{border-color:#111;color:#111;}
+.lang-btn.active{background:#1d2d44;border-color:#1d2d44;color:#fff;}
+
+.rights-hero{background:#1d2d44;border-radius:10px;padding:44px 48px;margin-bottom:28px;}
+.rights-hero-label{font-size:12px;letter-spacing:2px;color:#c9a940;text-transform:uppercase;margin-bottom:12px;}
+.rights-hero h1{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3;word-break:keep-all;}
+.rights-hero p{font-size:15px;color:#a8b8cc;line-height:1.7;word-break:keep-all;}
+
+.rights-section{margin-bottom:28px;}
+.rights-section h2{font-size:17px;font-weight:700;color:#111;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #f5c800;}
+.rights-section p{font-size:14px;line-height:1.9;color:#444;word-break:keep-all;}
+
+.genre-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.genre-tag{background:#f4f4f4;border-radius:4px;padding:5px 12px;font-size:13px;color:#444;}
+
+.rights-works{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:4px;}
+.rights-work-card{background:#fafafa;border:1px solid #eee;border-radius:8px;overflow:hidden;transition:box-shadow .2s;}
+.rights-work-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.rights-work-img{width:100%;aspect-ratio:5/7;object-fit:cover;object-position:top;display:block;}
+.rights-work-img-placeholder{width:100%;aspect-ratio:5/7;background:#eee;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px;}
+.rights-work-info{padding:12px;}
+.rights-work-title{font-size:14px;font-weight:700;color:#111;margin-bottom:6px;word-break:keep-all;}
+.rights-work-genre{font-size:11px;color:#4a7ab5;}
+
+.rights-contact-box{background:#f9f5eb;border-radius:8px;padding:28px 32px;}
+.rights-contact-box h3{font-size:15px;font-weight:700;color:#111;margin-bottom:10px;}
+.rights-contact-box p{font-size:14px;color:#555;line-height:1.8;word-break:keep-all;}
+.rights-contact-box a{color:#1d2d44;font-weight:600;text-decoration:none;}
+.rights-contact-box a:hover{text-decoration:underline;}
+
+.rights-avail-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.rights-avail-list li{font-size:14px;color:#444;padding:10px 14px;background:#f8f8f8;border-left:3px solid #c9a940;border-radius:0 4px 4px 0;}
+
+@media(max-width:768px){
+  .rights-hero{padding:28px 22px;}
+  .rights-hero h1{font-size:24px;}
+  .rights-works{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .rights-avail-list{grid-template-columns:1fr;}
+  .rights-contact-box{padding:20px 18px;}
+}
+@media(max-width:400px){
+  .rights-works{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-wrap">
+  <div class="content">
+
+    <!-- Language Switcher -->
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-btn" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="ja">日本語</button>
+      <button class="lang-btn" data-lang="zh-TW">繁體中文</button>
+      <button class="lang-btn" data-lang="zh-CN">简体中文</button>
+      <button class="lang-btn" data-lang="th">ภาษาไทย</button>
+      <button class="lang-btn" data-lang="ko">한국어</button>
+    </div>
+
+    <!-- Hero -->
+    <div class="rights-hero">
+      <div class="rights-hero-label" id="hero-label"></div>
+      <h1 id="hero-title"></h1>
+      <p id="hero-desc"></p>
+    </div>
+
+    <!-- About -->
+    <div class="rights-section">
+      <h2 id="about-title"></h2>
+      <p id="about-text"></p>
+    </div>
+
+    <!-- Rights Available -->
+    <div class="rights-section">
+      <h2 id="avail-title"></h2>
+      <ul class="rights-avail-list" id="avail-list"></ul>
+    </div>
+
+    <!-- Genres -->
+    <div class="rights-section">
+      <h2 id="genre-title"></h2>
+      <div class="genre-tags" id="genre-tags"></div>
+    </div>
+
+    <!-- Featured Works -->
+    <div class="rights-section">
+      <h2 id="works-title"></h2>
+      <div class="rights-works" id="works-grid"></div>
+    </div>
+
+    <!-- Contact -->
+    <div class="rights-section">
+      <h2 id="contact-title"></h2>
+      <div class="rights-contact-box">
+        <h3 id="contact-name">달빛출판사 | Dalbit Publishing House</h3>
+        <p id="contact-text"></p>
+      </div>
+    </div>
+
+  </div>
+  <footer>
+    <ul class="footer-nav">
+      <li><a href="index.html">회사소개</a></li>
+      <li><a href="works.html">작품소개</a></li>
+      <li><a href="rights.html">International Rights</a></li>
+      <li><a href="contact.html">CONTACT</a></li>
+    </ul>
+    <p class="footer-info">달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판</p>
+    <p class="footer-copy">Copyright ⓒ 2026 달빛출판사 | 꿈을 만드는 장르소설 전문 전자출판 All rights reserved.</p>
+  </footer>
+</div>
+
+<script src="sidebar.js"></script>
+<script>
+renderSidebar('rights');
+
+/* ── Content Data ── */
+const LANGS = {
+  en: {
+    heroLabel: 'International Rights',
+    heroTitle: 'Bringing Korean GL Novels to the World',
+    heroDesc: 'Dalbit Publishing House is South Korea\'s leading specialist publisher of Girls\' Love (GL / Yuri) digital novels. We are actively seeking international co-publishing and translation rights partners.',
+    aboutTitle: 'About Dalbit Publishing House',
+    aboutText: 'Founded in April 2021, Dalbit Publishing House has rapidly established itself as a leading publisher in Korean digital genre fiction, with a particular focus on Girls\' Love (GL / Yuri) novels. In just a few years, we have built a catalog of over 40 titles spanning contemporary romance, fantasy, historical fiction, thriller, and science fiction. Our works are distributed across all major Korean e-book platforms including Ridibooks, Naver Series, Kakao Page, Aladin, YES24, Kyobo, and Bookcube.',
+    availTitle: 'Rights Available',
+    availItems: ['Translation Rights', 'Digital Distribution Rights', 'Print Rights', 'Audiobook Rights', 'Webtoon / Manhwa Adaptation', 'Drama / Film Adaptation'],
+    genreTitle: 'Genres',
+    genres: ['Contemporary Romance', 'Office Romance', 'Fantasy', 'Historical Fiction', 'School Life', 'Thriller', 'Science Fiction', 'Post-Apocalyptic', 'Sentinel/Guide'],
+    worksTitle: 'Featured Works',
+    contactTitle: 'Rights Inquiries',
+    contactText: 'For rights inquiries and catalog information, please contact:<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a><br><br>We look forward to hearing from you and exploring opportunities to bring our titles to international readers.'
+  },
+  ja: {
+    heroLabel: '国際版権',
+    heroTitle: '韓国GLノベルを世界へ',
+    heroDesc: 'ダルビット出版社は、韓国を代表するGirls\' Love（GL・百合）デジタル小説の専門出版社です。国際的な共同出版・翻訳版権パートナーを積極的に募集しています。',
+    aboutTitle: 'ダルビット出版社について',
+    aboutText: '2021年4月に設立されたダルビット出版社は、韓国のデジタル・ジャンル小説市場において急速に成長し、Girls\' Love（GL・百合）小説の主要出版社としての地位を確立しました。設立からわずか数年で、現代ロマンス、ファンタジー、歴史小説、スリラー、SFなど多彩なジャンルにわたる40タイトル以上のカタログを構築しています。作品はリディブックス、NAVERシリーズ、カカオページなど韓国の主要電子書籍プラットフォームで配信されています。',
+    availTitle: '取得可能な版権',
+    availItems: ['翻訳権', 'デジタル配信権', '紙書籍出版権', 'オーディオブック権', 'ウェブトゥーン／マンガ化権', 'ドラマ／映画化権'],
+    genreTitle: 'ジャンル',
+    genres: ['現代ロマンス', 'オフィスロマンス', 'ファンタジー', '歴史小説', '学園もの', 'スリラー', 'SF', 'ポストアポカリプス', 'センチネル/ガイド'],
+    worksTitle: '注目作品',
+    contactTitle: '版権に関するお問い合わせ',
+    contactText: '版権・カタログに関するお問い合わせは下記までご連絡ください：<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a><br><br>皆様からのご連絡をお待ちしております。'
+  },
+  'zh-TW': {
+    heroLabel: '國際版權',
+    heroTitle: '將韓國GL小說帶向世界',
+    heroDesc: '달빛출판사（達爾比特出版社）是韓國領先的Girls\' Love（GL/百合）數位小說專業出版社，積極尋求國際共同出版及翻譯版權合作夥伴。',
+    aboutTitle: '關於達爾比特出版社',
+    aboutText: '달빛출판사於2021年4月成立，迅速在韓國數位類型小說市場確立了領先地位，專注於Girls\' Love（GL/百合）小說的出版。在短短幾年內，我們建立了超過40部作品的豐富目錄，涵蓋現代言情、奇幻、歷史小說、懸疑驚悚及科幻等多種類型。作品於Ridibooks、NAVER系列、Kakao Page、Aladin、YES24、教保文庫等韓國主要電子書平台發行。',
+    availTitle: '可授權項目',
+    availItems: ['翻譯版權', '數位發行版權', '紙本出版版權', '有聲書版權', '漫畫／網路漫畫改編權', '戲劇／電影改編權'],
+    genreTitle: '作品類型',
+    genres: ['現代言情', '職場戀愛', '奇幻', '歷史小說', '校園', '懸疑驚悚', '科幻', '末世', '向導/哨兵'],
+    worksTitle: '精選作品',
+    contactTitle: '版權洽詢',
+    contactText: '版權及目錄相關洽詢，請聯繫：<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a><br><br>期待與您合作，共同將我們的作品推向國際讀者。'
+  },
+  'zh-CN': {
+    heroLabel: '国际版权',
+    heroTitle: '将韩国GL小说带向世界',
+    heroDesc: '달빛출판사（达尔比特出版社）是韩国领先的Girls\' Love（GL/百合）数字小说专业出版社，积极寻求国际共同出版及翻译版权合作伙伴。',
+    aboutTitle: '关于达尔比特出版社',
+    aboutText: '달빛출판사于2021年4月成立，迅速在韩国数字类型小说市场确立了领先地位，专注于Girls\' Love（GL/百合）小说的出版。在短短几年内，我们建立了超过40部作品的丰富目录，涵盖现代言情、奇幻、历史小说、悬疑惊悚及科幻等多种类型。作品在Ridibooks、NAVER系列、Kakao Page、Aladin、YES24、教保文库等韩国主要电子书平台发行。',
+    availTitle: '可授权项目',
+    availItems: ['翻译版权', '数字发行版权', '纸本出版版权', '有声书版权', '漫画／网络漫画改编权', '剧集／电影改编权'],
+    genreTitle: '作品类型',
+    genres: ['现代言情', '职场恋爱', '奇幻', '历史小说', '校园', '悬疑惊悚', '科幻', '末世', '向导/哨兵'],
+    worksTitle: '精选作品',
+    contactTitle: '版权洽询',
+    contactText: '版权及目录相关洽询，请联系：<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a><br><br>期待与您合作，共同将我们的作品推向国际读者。'
+  },
+  th: {
+    heroLabel: 'สิทธิ์ระหว่างประเทศ',
+    heroTitle: 'นำนิยาย GL เกาหลีสู่โลก',
+    heroDesc: 'สำนักพิมพ์ดาลบิตเป็นผู้นำด้านการตีพิมพ์นิยายดิจิทัลแนว Girls\' Love (GL/Yuri) ในเกาหลี เราพร้อมรับพันธมิตรด้านการร่วมตีพิมพ์และสิทธิ์การแปลระดับนานาชาติ',
+    aboutTitle: 'เกี่ยวกับสำนักพิมพ์ดาลบิต',
+    aboutText: 'สำนักพิมพ์ดาลบิตก่อตั้งขึ้นในเดือนเมษายน 2564 และเติบโตอย่างรวดเร็วจนกลายเป็นผู้นำในตลาดนิยายดิจิทัลเกาหลี โดยเฉพาะนิยายแนว Girls\' Love (GL/Yuri) ในช่วงเวลาเพียงไม่กี่ปี เราสร้างคลังผลงานกว่า 40 เรื่องในหลากหลายแนว ทั้งโรแมนซ์ร่วมสมัย แฟนตาซี นิยายอิงประวัติศาสตร์ ระทึกขวัญ และนิยายวิทยาศาสตร์ ผลงานของเราวางจำหน่ายบนแพลตฟอร์มอีบุ๊กชั้นนำของเกาหลี',
+    availTitle: 'สิทธิ์ที่เปิดรับ',
+    availItems: ['สิทธิ์การแปล', 'สิทธิ์การจัดจำหน่ายดิจิทัล', 'สิทธิ์การพิมพ์', 'สิทธิ์หนังสือเสียง', 'สิทธิ์ดัดแปลงเป็นการ์ตูน', 'สิทธิ์ดัดแปลงเป็นซีรีส์/ภาพยนตร์'],
+    genreTitle: 'ประเภทผลงาน',
+    genres: ['โรแมนซ์ร่วมสมัย', 'โรแมนซ์ในที่ทำงาน', 'แฟนตาซี', 'นิยายอิงประวัติศาสตร์', 'ชีวิตในโรงเรียน', 'ระทึกขวัญ', 'นิยายวิทยาศาสตร์', 'หลังหายนะ', 'เซนทิเนล/ไกด์'],
+    worksTitle: 'ผลงานแนะนำ',
+    contactTitle: 'สอบถามเรื่องสิทธิ์',
+    contactText: 'สำหรับการสอบถามเรื่องสิทธิ์และข้อมูลผลงาน กรุณาติดต่อ：<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a><br><br>เรายินดีตอบรับทุกการติดต่อและพร้อมสำรวจโอกาสความร่วมมือ'
+  },
+  ko: {
+    heroLabel: '해외판권 안내',
+    heroTitle: '달빛출판사의 작품을 세계로',
+    heroDesc: '달빛출판사는 GL(Girls\' Love/백합) 장르소설 전문 전자출판사입니다. 해외 공동출판 및 번역 판권 파트너를 적극적으로 모집하고 있습니다.',
+    aboutTitle: '달빛출판사 소개',
+    aboutText: '2021년 4월 설립된 달빛출판사는 GL(Girls\' Love) 장르소설 전문 전자출판사로서 빠르게 성장하여 현재 40여 편의 작품을 보유하고 있습니다. 현대물, 판타지, 시대물, 스릴러, SF 등 다양한 장르를 아우르며, 국내 주요 전자책 플랫폼에 유통하고 있습니다.',
+    availTitle: '판권 종류',
+    availItems: ['번역 출판권', '디지털 배급권', '종이책 출판권', '오디오북 권리', '웹툰/만화 원작 제공권', '드라마/영화 원작 제공권'],
+    genreTitle: '장르',
+    genres: ['현대물', '오피스물', '판타지', '시대물', '학원물', '스릴러', 'SF', '포스트아포칼립스', '센티넬/가이드버스'],
+    worksTitle: '주요 작품',
+    contactTitle: '판권 문의',
+    contactText: '판권 및 카탈로그 문의：<br><br>📧 <a href="mailto:dalbit8789@naver.com">dalbit8789@naver.com</a>'
+  }
+};
+
+/* ── Featured Works ── */
+const FEATURED = [
+  {
+    title: '십 분의 오',
+    titleEn: 'Ten to Five',
+    genre: 'Contemporary GL · Office Romance',
+    genreJa: '現代GL・オフィスロマンス',
+    genreZhTW: '現代GL・職場言情',
+    genreZhCN: '现代GL・职场言情',
+    genreTh: 'GL ร่วมสมัย · โรแมนซ์ในที่ทำงาน',
+    poster: 'https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo'
+  },
+  {
+    title: '시한부 공녀님의 마지막 여행',
+    titleEn: 'The Dying Duchess\' Last Journey',
+    genre: 'Fantasy GL · Terminal Illness',
+    genreJa: 'ファンタジーGL・余命もの',
+    genreZhTW: '奇幻GL・生命倒數',
+    genreZhCN: '奇幻GL・倒计时',
+    genreTh: 'GL แฟนตาซี · ชีวิตนับถอยหลัง',
+    poster: 'https://drive.google.com/thumbnail?id=18KIb0BBPGwgp9YG6n6pC3qJQyjxL36Bq&sz=s4000'
+  },
+  {
+    title: '열애소설',
+    titleEn: 'A Novel of Passionate Love',
+    genre: 'Historical GL · Japanese Colonial Era',
+    genreJa: '歴史GL・日本統治時代',
+    genreZhTW: '歷史GL・日治時代',
+    genreZhCN: '历史GL·日治时代',
+    genreTh: 'GL ประวัติศาสตร์ · ยุคอาณานิคมญี่ปุ่น',
+    poster: 'https://drive.google.com/thumbnail?id=1L-yTOTs-yhu0wiufwQGxqDyg6n0kM4m6&sz=s4000'
+  }
+];
+
+/* ── Language Detection ── */
+const countryToLang = {
+  JP:'ja',
+  TW:'zh-TW', HK:'zh-TW', MO:'zh-TW',
+  CN:'zh-CN', SG:'zh-CN',
+  TH:'th',
+  KR:'ko'
+};
+
+function getLangFromBrowser() {
+  const l = (navigator.language || 'en').toLowerCase();
+  if (l.startsWith('ja')) return 'ja';
+  if (l === 'zh-tw' || l === 'zh-hk') return 'zh-TW';
+  if (l.startsWith('zh')) return 'zh-CN';
+  if (l.startsWith('th')) return 'th';
+  if (l.startsWith('ko')) return 'ko';
+  return 'en';
+}
+
+async function detectLang() {
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 4000);
+    const r = await fetch('https://ipapi.co/json/', {signal: ctrl.signal});
+    const d = await r.json();
+    return countryToLang[d.country_code] || 'en';
+  } catch {
+    try {
+      const ctrl2 = new AbortController();
+      setTimeout(() => ctrl2.abort(), 3000);
+      const r2 = await fetch('https://ipwho.is/', {signal: ctrl2.signal});
+      const d2 = await r2.json();
+      return countryToLang[d2.country_code] || 'en';
+    } catch {
+      return getLangFromBrowser();
+    }
+  }
+}
+
+/* ── Render ── */
+function getWorkGenre(work, lang) {
+  if (lang === 'ja') return work.genreJa;
+  if (lang === 'zh-TW') return work.genreZhTW;
+  if (lang === 'zh-CN') return work.genreZhCN;
+  if (lang === 'th') return work.genreTh;
+  if (lang === 'ko') return work.genre.replace('GL', 'GL').split('·')[0].trim();
+  return work.genre;
+}
+
+function renderPage(lang) {
+  const L = LANGS[lang] || LANGS['en'];
+  document.documentElement.lang = lang;
+
+  document.getElementById('hero-label').textContent = L.heroLabel;
+  document.getElementById('hero-title').textContent = L.heroTitle;
+  document.getElementById('hero-desc').textContent = L.heroDesc;
+  document.getElementById('about-title').textContent = L.aboutTitle;
+  document.getElementById('about-text').textContent = L.aboutText;
+  document.getElementById('avail-title').textContent = L.availTitle;
+  document.getElementById('avail-list').innerHTML = L.availItems.map(i => `<li>${i}</li>`).join('');
+  document.getElementById('genre-title').textContent = L.genreTitle;
+  document.getElementById('genre-tags').innerHTML = L.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+  document.getElementById('works-title').textContent = L.worksTitle;
+  document.getElementById('works-grid').innerHTML = FEATURED.map(w => `
+    <div class="rights-work-card">
+      <img class="rights-work-img" src="${w.poster}" alt="${w.title}" onerror="this.outerHTML='<div class=\\'rights-work-img-placeholder\\'>이미지 준비중</div>'">
+      <div class="rights-work-info">
+        <div class="rights-work-title">${w.title}</div>
+        <div class="rights-work-genre">${getWorkGenre(w, lang)}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('contact-title').textContent = L.contactTitle;
+  document.getElementById('contact-text').innerHTML = L.contactText;
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+/* ── Init ── */
+let currentLang = 'en';
+renderPage('en'); // 즉시 기본 렌더링
+
+detectLang().then(lang => {
+  currentLang = lang;
+  renderPage(lang);
+});
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentLang = btn.dataset.lang;
+    renderPage(currentLang);
+  });
+});
+</script>
+</body>
+</html>
