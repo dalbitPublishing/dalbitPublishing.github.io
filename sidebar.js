@@ -44,7 +44,7 @@ function renderSidebar(activePage) {
     <div style="margin-top:auto;padding-top:20px;border-top:1px solid #eee;">
       <div style="font-size:11px;color:#aaa;margin-bottom:6px;">🌐 Language</div>
       <div id="google_translate_element"></div>
-      <button id="reset-translate" onclick="resetToKorean()" style="display:none;margin-top:6px;font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 8px;background:#fff;color:#555;cursor:pointer;width:100%;">한국어 원문</button>
+      <button id="reset-translate" onclick="resetToKorean()" style="margin-top:6px;font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 8px;background:#fff;color:#555;cursor:pointer;width:100%;">한국어 원문</button>
     </div>
   `;
 
