@@ -22,16 +22,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ── 플로팅 공유 버튼 ── */
+/* ── 포스터 + 공유버튼 세로 래퍼 ── */
+.poster-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
+}
 .share-float {
   display: flex;
+  flex-direction: column;
   gap: 7px;
   align-items: center;
-  margin-top: 14px;
+  padding-top: 4px;
 }
 .share-icon-btn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -47,11 +55,12 @@
 .share-tumblr  { background: #35465c; }
 .share-link    { background: #e0e0e0; }
 .share-copied-msg {
-  font-size: 11px;
+  font-size: 10px;
   color: #888;
-  margin-left: 4px;
+  writing-mode: vertical-rl;
   opacity: 0;
   transition: opacity .3s;
+  margin-top: 2px;
 }
 .share-copied-msg.show { opacity: 1; }
 </style>
@@ -126,13 +135,15 @@ worksData.forEach((work, idx) => {
   target.innerHTML += `
     <div class="swiper-slide" data-slug="${slug}">
       <div class="slide-content">
-        ${imgHtml}
+        <div class="poster-wrap">
+          ${imgHtml}
+          ${shareHtml}
+        </div>
         <div class="work-info">
           <div class="work-title">${work.title}</div>
           <div class="work-synopsis">${work.synopsis}</div>
           ${kwHtml}
           <div class="platform-wrap">${btnHtml}</div>
-          ${shareHtml}
         </div>
       </div>
     </div>`;
