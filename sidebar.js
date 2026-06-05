@@ -110,6 +110,8 @@ function renderSidebar(activePage) {
         if (target && !nav.startsWith('ko')) {
           select.value = target;
           select.dispatchEvent(new Event('change'));
+          var btn = document.getElementById('reset-translate');
+          if (btn) btn.style.display = 'inline-block';
         }
         select.addEventListener('change', function() {
           var btn = document.getElementById('reset-translate');
