@@ -23,10 +23,7 @@ function renderSidebar(activePage) {
             <li class="nav-item"><a href="${pages.library}" class="nav-link${activePage==='library'?' active':''}">달빛 라이브러리(GL)</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="${pages.rights}" class="nav-link${activePage==='rights'?' active':''}">International Rights</a>
-        </li>
-        <li class="nav-item">
+<li class="nav-item">
           <a href="${pages.contact}" class="nav-link${activePage==='contact'?' active':''}">CONTACT</a>
         </li>
       </ul>
