@@ -7,6 +7,27 @@ function renderSidebar(activePage) {
     contact: 'contact.html',
     rights:  'rights.html'
   };
+
+  // 언어 목록 (각국 자국어 표기)
+  const LANGS = [
+    { code: 'ko',    label: '한국어' },
+    { code: 'en',    label: 'English' },
+    { code: 'ja',    label: '日本語' },
+    { code: 'zh-TW', label: '繁體中文' },
+    { code: 'zh-CN', label: '简体中文' },
+    { code: 'th',    label: 'ภาษาไทย' },
+    { code: 'fr',    label: 'Français' },
+    { code: 'de',    label: 'Deutsch' },
+    { code: 'es',    label: 'Español' },
+    { code: 'ar',    label: 'العربية' },
+    { code: 'vi',    label: 'Tiếng Việt' },
+    { code: 'id',    label: 'Bahasa Indonesia' },
+  ];
+
+  const langOptions = LANGS.map(l =>
+    `<option value="${l.code}">${l.label}</option>`
+  ).join('');
+
   document.getElementById('sidebar').innerHTML = `
     <a href="${pages.about}" class="logo">
       <img src="logo.png" alt="달빛출판사" onerror="this.src='https://cdn.imweb.me/thumbnail/20260513/1f3f41f7e3698.png'">
@@ -23,7 +44,7 @@ function renderSidebar(activePage) {
             <li class="nav-item"><a href="${pages.library}" class="nav-link${activePage==='library'?' active':''}">달빛 라이브러리(GL)</a></li>
           </ul>
         </li>
-<li class="nav-item">
+        <li class="nav-item">
           <a href="${pages.contact}" class="nav-link${activePage==='contact'?' active':''}">CONTACT</a>
         </li>
       </ul>
@@ -40,12 +61,15 @@ function renderSidebar(activePage) {
         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </a>
     </div>
-    <!-- 번역 바 -->
-    <div style="margin-top:auto;padding-top:20px;border-top:1px solid #eee;">
+    <!-- 커스텀 언어 선택 -->
+    <div style="margin-top:auto;padding-top:16px;border-top:1px solid #eee;">
       <div style="font-size:11px;color:#aaa;margin-bottom:6px;">🌐 Language</div>
-      <div id="google_translate_element"></div>
-      <button id="reset-translate" onclick="resetToKorean()" style="margin-top:6px;font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 8px;background:#fff;color:#555;cursor:pointer;width:100%;">한국어 원문</button>
+      <select id="custom-lang-select" onchange="applyLang(this.value)" style="width:100%;font-size:12px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;color:#555;background:#fff;cursor:pointer;outline:none;">
+        ${langOptions}
+      </select>
     </div>
+    <!-- Google Translate 숨김 엘리먼트 -->
+    <div id="google_translate_element" style="position:absolute;opacity:0;pointer-events:none;height:0;overflow:hidden;"></div>
   `;
 
   // 모바일 상단 바 삽입
@@ -78,27 +102,29 @@ function renderSidebar(activePage) {
     });
   }
 
-  // Google Translate 초기화 (한 번만)
+  // Google Translate 스타일 (툴바 숨김)
   if (!document.getElementById('gt-style')) {
     const s = document.createElement('style');
     s.id = 'gt-style';
-    s.textContent = '.goog-te-banner-frame{display:none!important;}body{top:0!important;}.skiptranslate iframe{display:none!important;}#google_translate_element select{font-size:11px;border:1px solid #ddd;border-radius:4px;padding:3px 6px;color:#555;background:#fff;cursor:pointer;outline:none;width:100%;}';
+    s.textContent = '.goog-te-banner-frame{display:none!important;}body{top:0!important;}.skiptranslate iframe{display:none!important;}';
     document.head.appendChild(s);
   }
 
+  // Google Translate 로드 (한 번만)
   if (!window._gtLoaded) {
     window._gtLoaded = true;
     window.googleTranslateElementInit = function() {
       new google.translate.TranslateElement({
         pageLanguage: 'ko',
         includedLanguages: 'en,ja,zh-TW,zh-CN,th,fr,de,es,ar,vi,id',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
       }, 'google_translate_element');
 
+      // 브라우저 언어 자동감지
       function tryAutoTranslate() {
-        var select = document.querySelector('.goog-te-combo');
-        if (!select) { setTimeout(tryAutoTranslate, 500); return; }
+        var gtSelect = document.querySelector('.goog-te-combo');
+        if (!gtSelect) { setTimeout(tryAutoTranslate, 500); return; }
+
         var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
         var map = {
           'ja':'ja','ja-jp':'ja',
@@ -108,15 +134,12 @@ function renderSidebar(activePage) {
         };
         var target = map[nav] || map[nav.split('-')[0]];
         if (target && !nav.startsWith('ko')) {
-          select.value = target;
-          select.dispatchEvent(new Event('change'));
-          var btn = document.getElementById('reset-translate');
-          if (btn) btn.style.display = 'inline-block';
+          setGoogleTranslate(gtSelect, target);
+          // 커스텀 드롭다운도 동기화
+          var sel = document.getElementById('custom-lang-select');
+          if (sel) sel.value = target;
         }
-        select.addEventListener('change', function() {
-          var btn = document.getElementById('reset-translate');
-          if (btn) btn.style.display = select.value ? 'inline-block' : 'none';
-        });
+        window._gtSelect = gtSelect;
       }
       setTimeout(tryAutoTranslate, 1000);
     };
@@ -127,8 +150,24 @@ function renderSidebar(activePage) {
   }
 }
 
-function resetToKorean() {
-  document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
-  document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; domain=' + window.location.hostname + '; path=/';
-  window.location.reload();
+function setGoogleTranslate(gtSelect, langCode) {
+  gtSelect.value = langCode;
+  gtSelect.dispatchEvent(new Event('change'));
+}
+
+function applyLang(code) {
+  if (code === 'ko') {
+    // 한국어 원문 복원
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:01 GMT; domain=' + window.location.hostname + '; path=/';
+    window.location.reload();
+    return;
+  }
+  function tryApply() {
+    var gtSelect = window._gtSelect || document.querySelector('.goog-te-combo');
+    if (!gtSelect) { setTimeout(tryApply, 300); return; }
+    window._gtSelect = gtSelect;
+    setGoogleTranslate(gtSelect, code);
+  }
+  tryApply();
 }
