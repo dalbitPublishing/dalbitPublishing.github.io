@@ -4,10 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>작품소개 | 달빛출판사</title>
+
+<!-- ── OG / Twitter 태그 ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dalbitpublishing.github.io/works.html">
+<meta property="og:title" content="작품소개 | 달빛출판사">
+<meta property="og:description" content="달빛출판사의 GL 웹소설 작품 목록. GL/yuri web novels by Dalbit Publishing.">
+<meta property="og:image" content="https://dalbitpublishing.github.io/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="작품소개 | 달빛출판사">
+<meta name="twitter:description" content="달빛출판사의 GL 웹소설 작품 목록. GL/yuri web novels by Dalbit Publishing.">
+<meta name="twitter:image" content="https://dalbitpublishing.github.io/logo.png">
+
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── 플로팅 공유 버튼 ── */
+.share-float {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-top: 14px;
+}
+.share-icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s, opacity .15s;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.share-icon-btn:hover { transform: scale(1.12); opacity: .85; }
+.share-x       { background: #111; }
+.share-tumblr  { background: #35465c; }
+.share-link    { background: #e0e0e0; }
+.share-copied-msg {
+  font-size: 11px;
+  color: #888;
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.share-copied-msg.show { opacity: 1; }
+</style>
 </head>
 <body>
 <aside class="sidebar" id="sidebar"></aside>
@@ -43,8 +90,13 @@ const pInfo = [
   {id:'bomtoon',n:'봄툰'},{id:'bookcube',n:'북큐브'},{id:'joara',n:'조아라'}
 ];
 
+const BASE_URL = 'https://dalbitpublishing.github.io/works.html';
+
 const target = document.getElementById('work-render-target');
-worksData.forEach(work => {
+worksData.forEach((work, idx) => {
+  const slug = work.slug || ('work-' + idx);
+  const shareUrl = BASE_URL + '#' + slug;
+
   const btnHtml = pInfo.map(p =>
     work.links[p.id] ? `<a href="${work.links[p.id]}" target="_blank" class="p-btn ${p.id}">${p.n}</a>` : ''
   ).join('');
@@ -52,8 +104,27 @@ worksData.forEach(work => {
     ? `<img src="${work.poster}" class="work-poster" onerror="this.style.display='none'">`
     : `<div class="work-poster-placeholder">이미지 준비중</div>`;
   const kwHtml = work.keywords ? `<div class="work-keywords">${work.keywords}</div>` : '';
+
+  // 플로팅 공유 버튼
+  const xUrl      = 'https://x.com/intent/tweet?url=' + encodeURIComponent(shareUrl) + '&text=' + encodeURIComponent(work.title + ' — 달빛출판사');
+  const tumblrUrl = 'https://www.tumblr.com/share/link?url=' + encodeURIComponent(shareUrl) + '&name=' + encodeURIComponent(work.title);
+
+  const shareHtml = `
+    <div class="share-float">
+      <a href="${xUrl}" target="_blank" class="share-icon-btn share-x" title="X에 공유">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="${tumblrUrl}" target="_blank" class="share-icon-btn share-tumblr" title="Tumblr에 공유">
+        <svg width="11" height="14" viewBox="0 0 24 24" fill="white"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.323 1.406z"/></svg>
+      </a>
+      <button class="share-icon-btn share-link" title="링크 복사" onclick="copyLink('${shareUrl}', this)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      </button>
+      <span class="share-copied-msg" id="copied-${slug}">복사됨!</span>
+    </div>`;
+
   target.innerHTML += `
-    <div class="swiper-slide">
+    <div class="swiper-slide" data-slug="${slug}">
       <div class="slide-content">
         ${imgHtml}
         <div class="work-info">
@@ -61,19 +132,61 @@ worksData.forEach(work => {
           <div class="work-synopsis">${work.synopsis}</div>
           ${kwHtml}
           <div class="platform-wrap">${btnHtml}</div>
+          ${shareHtml}
         </div>
       </div>
     </div>`;
 });
 
-new Swiper(".dalbitSwiper", {
-  slidesPerView: 1, spaceBetween: 100, loop: true, autoHeight: true,
+// ── 구조화 데이터 (Book Schema) ──
+const schemaList = worksData.map(work => ({
+  "@type": "Book",
+  "name": work.title,
+  "genre": "GL/Yuri Web Novel",
+  "inLanguage": "ko",
+  "publisher": { "@type": "Organization", "name": "달빛출판사" },
+  "url": 'https://dalbitpublishing.github.io/works.html#' + (work.slug || work.title)
+}));
+const schemaScript = document.createElement('script');
+schemaScript.type = 'application/ld+json';
+schemaScript.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaList });
+document.head.appendChild(schemaScript);
+
+// ── Swiper 초기화 ──
+const swiper = new Swiper(".dalbitSwiper", {
+  slidesPerView: 1, spaceBetween: 100, loop: false, autoHeight: true,
   navigation: {
     nextEl: ".dalbit-outer-container .swiper-button-next",
     prevEl: ".dalbit-outer-container .swiper-button-prev"
   },
-  pagination: { el: ".swiper-pagination", clickable: true }
+  pagination: { el: ".swiper-pagination", clickable: true },
+  on: {
+    slideChange: function() {
+      const slide = this.slides[this.activeIndex];
+      const slug = slide ? slide.getAttribute('data-slug') : null;
+      if (slug) history.replaceState(null, '', '#' + slug);
+    }
+  }
 });
+
+// ── URL 해시로 초기 슬라이드 이동 ──
+const hash = location.hash.replace('#', '');
+if (hash) {
+  const idx = worksData.findIndex(w => w.slug === hash);
+  if (idx !== -1) swiper.slideTo(idx, 0);
+}
+
+// ── 링크 복사 함수 ──
+function copyLink(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const slug = btn.closest('.swiper-slide').getAttribute('data-slug');
+    const msg = document.getElementById('copied-' + slug);
+    if (msg) {
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+    }
+  });
+}
 </script>
 </body>
 </html>
