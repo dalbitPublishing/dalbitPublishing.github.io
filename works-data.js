@@ -17,7 +17,7 @@ const worksData = [
     poster: `https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo`,
     synopsis: `스튜디오 소속 드라마 기획 PD인 정현진은 우연히 자신의 첫사랑이자 짝사랑인 차민영을 마주한다. 함께 보낸 하룻밤, 그것으로 끝나리라 생각한 관계는 차민영이 스튜디오 모회사 본부장으로 부임하면서 깊이 얽히기 시작하는데....`,
     keywords: `#현대물 #GL/백합 #로맨틱코미디 #오피스물 #사회인 #방송계 #재벌녀 #금수저 #영앤리치 #방송국 #PD #연상공 #능력공 #재벌공 #후회공 #상처공 #연하수 #평범수 #다정수 #외유내강 #집안사정 #재회 #동창 #선후배 #성장 #구원 #첫사랑 #트라우마 #피아노 #직장인로맨스 #나이차커플 #갑을관계 #선섹후사`,
-    links: { aladin:"http://aladin.kr/p/JS2Ej", ridi:"", series:"", kakao:"", kyobo:"", yes24:"", bomtoon:"", bookcube:"", joara:"" } },
+    links: { aladin: "http://aladin.kr/p/JS2Ej", ridi: "https://ridibooks.com/books/4614000147", series: "", kakao: "", kyobo: "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013096507", yes24: "https://m.yes24.com/goods/detail/191298052", bomtoon: "", bookcube: "https://www.bookcube.com/book/m/detail.asp?series_num=926041071", joara: "" } },
 
   { title: "예외의 법칙",
     slug: "yeouiui-beopchik",
