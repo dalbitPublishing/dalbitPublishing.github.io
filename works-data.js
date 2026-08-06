@@ -14,7 +14,7 @@
 const worksData = [
   { title: "결혼 대신 탈출할게요",
     slug: "sib-bun-ui-o",
-    poster: `https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo`,
+    poster: `https://lh3.googleusercontent.com/d/13V7mdYD2WdxprElH1EAncNbh0VPbgUKT`,
     synopsis: `플로리안의 공주 루디스는 카르타와 전쟁 중인 조국을 지원한다는 조건으로 세이브리아의 왕태자 토리스와 약혼을 맺는다.
 루디스가 성년이 되는 생일에 결혼식을 올리기로 약속하고 그때만을 기다리던 어느 날, 왕태자는 플로리안에 승산이 없음을 주장하며 조약을 손바닥 뒤집듯 저버리고 막무가내로 루디스와의 결혼을 추진한다.
 
