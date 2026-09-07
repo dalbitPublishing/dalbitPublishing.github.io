@@ -12,6 +12,13 @@
 // ============================================================
 
 const worksData = [
+ { title: "불멸을 끝내는 법",
+    slug: "bul-myeol-eul-kkeut-nae-neun-beop-1",
+    poster: `https://lh3.googleusercontent.com/d/1mcfzp4UreJeGcO-x87daFhf2zHk-iKaw`,
+    synopsis: `에테르나리스 왕국 왕실의 유일한 적통인 테오도르 크라우제. 옆 나라 모르드라디와의 분쟁이 장기화되며 왕실의 일원으로서 전쟁 일선에 내몰린 그의 옆에는 엘로이즈라는 여성이 언제나 함께했다. 뛰어난 전략으로써 테오도르를 보좌하며 숱한 위기에서 그를 구해낸 엘로이즈에게 테오도르는 어느새 신뢰를 넘어 연정마저 품고 있었다. 그러다 어느 가열찬 전투에서 엘로이즈는 테오도르를 지키려다 치명상을 입고 만다. 하지만 오열하는 테오도르가 무색하게 엘로이즈는 아무렇지 않은 듯 멀쩡했다. 어안이 벙벙한 테오도르에게 엘로이즈는 충격적인 말을 던지는데…. “이 지옥을 벗어나면, 테오도르의 정액으로 저를 임신시켜 주세요.”`,
+    keywords: `#로맨스판타지 #서양 #근세 #궁정물 #전쟁물 #판타지 #여주중심 #왕족 #황태자 #불멸 #순정남 #왕족/귀족남 #절륜남 #걸크러시 #직진녀 #능력녀 #신분차이 #몸정>맘정 #초월적존재 #나이차커플 #불멸 #고수위 #권선징악 #해피엔딩 #운명적사랑`,
+    links: { aladin: "", ridi: "https://ridibooks.com/books/4614000156", series: "", kakao: "", kyobo: "", yes24: "", bomtoon: "", bookcube: "", joara: "" } },
+
   { title: "결혼 대신 탈출할게요",
     slug: "gyeolhon-dasin-talchul",
     poster: `https://lh3.googleusercontent.com/d/13V7mdYD2WdxprElH1EAncNbh0VPbgUKT`,
