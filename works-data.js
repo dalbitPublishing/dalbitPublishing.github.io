@@ -12,6 +12,13 @@
 // ============================================================
 
 const worksData = [
+{ title: "다정의 부작용",
+    slug: "da-jeong-ui-bu-jak-yong",
+    poster: https://lh3.googleusercontent.com/d/1_rbhy5lpMnIZuNgSNbNiLAZ4-A6Ar-Bi`,
+    synopsis: `너무 잘나서 세상 재수 없던 동창과 십 년 만에 재회했다.연월. 이름부터 주인공 같은 걔는 여전히 완벽했고,권지민은 당연히 자신을 기억하지 못할 거라고 생각했다.“뭐라는 거야. 내가 널 기억하는데.”“퇴근하고 가끔 불러도 돼?”그런데 이상하다. 나는 너한테 못되게 굴었는데, 왜 너는 나한테 이렇게 다정하지?”`,
+    keywords: `#GL/백합 #현대물 #사회인 #직장인 #알바 #취준생 #평범녀 #직진녀 #다정녀 #순정녀 #짝사랑녀 #동갑내기 #친구>연인 #재회 #짝사랑 #오해 #일상 #현실연애 #달달`,
+    links: { aladin: "https://aladin.kr/p/VhmSh", ridi: "https://ridibooks.com/books/4614000158", series: "", kakao: "", kyobo: "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013618834", yes24: "https://m.yes24.com/goods/detail/197312210", bomtoon: "", bookcube: "https://www.bookcube.com/detail.asp?series_num=926070760", joara: "https://www.joara.com/book/1892362" } },
+
  { title: "불멸을 끝내는 법",
     slug: "bul-myeol-eul-kkeut-nae-neun-beop-1",
     poster: `https://lh3.googleusercontent.com/d/1mcfzp4UreJeGcO-x87daFhf2zHk-iKaw`,
