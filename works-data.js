@@ -20,7 +20,7 @@ const worksData = [
     keywords: `#GL/백합 #현대물 #사회인 #직장인 #알바 #취준생 #평범녀 #직진녀 #다정녀 #순정녀 #짝사랑녀 #동갑내기 #친구>연인 #재회 #짝사랑 #오해 #일상 #현실연애 #달달`,
     links: { aladin: "https://aladin.kr/p/VhmSh", ridi: "https://ridibooks.com/books/4614000158", series: "", kakao: "", kyobo: "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013618834", yes24: "https://m.yes24.com/goods/detail/197312210", bomtoon: "", bookcube: "https://www.bookcube.com/detail.asp?series_num=926070760", joara: "https://www.joara.com/book/1892362" } },
 
-    { title: "불멸을 끝내는 법",
+  { title: "불멸을 끝내는 법",
     slug: "bul-myeol-eul-kkeut-nae-neun-beop-1",
     poster: `https://lh3.googleusercontent.com/d/1mcfzp4UreJeGcO-x87daFhf2zHk-iKaw`,
     synopsis: `에테르나리스 왕국 왕실의 유일한 적통인 테오도르 크라우제. 옆 나라 모르드라디와의 분쟁이 장기화되며 왕실의 일원으로서 전쟁 일선에 내몰린 그의 옆에는 엘로이즈라는 여성이 언제나 함께했다. 뛰어난 전략으로써 테오도르를 보좌하며 숱한 위기에서 그를 구해낸 엘로이즈에게 테오도르는 어느새 신뢰를 넘어 연정마저 품고 있었다. 그러다 어느 가열찬 전투에서 엘로이즈는 테오도르를 지키려다 치명상을 입고 만다. 하지만 오열하는 테오도르가 무색하게 엘로이즈는 아무렇지 않은 듯 멀쩡했다. 어안이 벙벙한 테오도르에게 엘로이즈는 충격적인 말을 던지는데…. “이 지옥을 벗어나면, 테오도르의 정액으로 저를 임신시켜 주세요.”`,
