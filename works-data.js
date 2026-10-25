@@ -19,7 +19,6 @@ const worksData = [
     keywords: `#GL/백합 #현대물 #사회인 #대학생 #체대생 #태권도 #연하공 #연상수 #달달 #나이차커플`,
     links: { aladin: "", ridi: "", series: "", kakao: "", kyobo: "", yes24: "", bomtoon: "", bookcube: "", joara: "", lily-house(TH): "https://lily-house.com/shop-2/novel/novel-stock/true-romance-1/" } },
 
-
   { title: "다정의 부작용",
     slug: "da-jeong-ui-bu-jak-yong",
     poster: `https://lh3.googleusercontent.com/d/1_rbhy5lpMnIZuNgSNbNiLAZ4-A6Ar-Bi`,
