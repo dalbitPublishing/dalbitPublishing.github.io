@@ -39,21 +39,21 @@ const worksData = [
     poster: `https://lh3.googleusercontent.com/d/1Rz5yGPfyCqEK--KzoGhbSSJUeLTeuBwo`,
     synopsis: `스튜디오 소속 드라마 기획 PD인 정현진은 우연히 자신의 첫사랑이자 짝사랑인 차민영을 마주한다. 함께 보낸 하룻밤, 그것으로 끝나리라 생각한 관계는 차민영이 스튜디오 모회사 본부장으로 부임하면서 깊이 얽히기 시작하는데....`,
     keywords: `#현대물 #GL/백합 #로맨틱코미디 #오피스물 #사회인 #방송계 #재벌녀 #금수저 #영앤리치 #방송국 #PD #연상공 #능력공 #재벌공 #후회공 #상처공 #연하수 #평범수 #다정수 #외유내강 #집안사정 #재회 #동창 #선후배 #성장 #구원 #첫사랑 #트라우마 #피아노 #직장인로맨스 #나이차커플 #갑을관계 #선섹후사`,
-    links: { aladin: "http://aladin.kr/p/JS2Ej", ridi: "https://ridibooks.com/books/4614000147", series: "", kakao: "", kyobo: "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013096507", yes24: "https://m.yes24.com/goods/detail/191298052", bomtoon: "", bookcube: "https://www.bookcube.com/book/m/detail.asp?series_num=926041071", joara: "" } },
+    links: { aladin: "http://aladin.kr/p/JS2Ej", ridi: "https://ridibooks.com/books/4614000147", series: "https://series.naver.com/novel/detail.series?productNo=14217748", kakao: "", kyobo: "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013096507", yes24: "https://m.yes24.com/goods/detail/191298052", bomtoon: "https://www.bomtoon.com/detail/db_51", bookcube: "https://www.bookcube.com/book/m/detail.asp?series_num=926041071", joara: "" } },
 
   { title: "예외의 법칙",
     slug: "yeouiui-beopchik",
     poster: `https://lh3.googleusercontent.com/d/1hFg73VHwiCxB_iSmF056916idyL9gluq`,
     synopsis: `시야에 들어온 사람을 제 생각대로 움직이게 할 수 있는 신기한 능력을 가진 서이진.\n\n제약회사 영업사원으로 오늘도 근면 성실하게 일하는 그녀의 앞에 처음으로 제 능력이 통하지 않는 상대, 하루 약국의 약사 이유안이 나타난다.\n\n사람을 대하는 게 한없이 서투른 이진은 과연 제 인생 최초의 예외를 어떻게 극복해 나갈 것인가?`,
     keywords: `#GL/백합 #현대물 #오피스물 #일상물 #사회인 #직장인\n#메디컬 #제약회사 #영업사원 #약사 #달달물 #초능력 #갑을관계 #오해/착각\n#미인공 #연하공 #잔망공 #능글공 #연상수 #얼빠수 #단정수 #상처수`,
-    links: { aladin:"https://t.co/vGZmtuPv8z", ridi:"https://ridibooks.com/books/4614000145", series:"https://m.series.naver.com/novel/detail.series?productNo=14077158", kakao:"", kyobo:"https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012944579", yes24:"https://m.yes24.com/goods/detail/189004728", bomtoon:"", bookcube:"https://www.bookcube.com/book/m/detail.asp?series_num=926028407", joara:"" } },
+    links: { aladin:"https://t.co/vGZmtuPv8z", ridi:"https://ridibooks.com/books/4614000145", series:"https://m.series.naver.com/novel/detail.series?productNo=14077158", kakao:"", kyobo:"https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012944579", yes24:"https://m.yes24.com/goods/detail/189004728", bomtoon:"https://www.bomtoon.com/detail/db_50", bookcube:"https://www.bookcube.com/book/m/detail.asp?series_num=926028407", joara:"" } },
 
   { title: "어떤 우정은",
     slug: "eotteon-ujeong-eun",
     poster: `https://lh3.googleusercontent.com/u/0/d/10AG2cGm383jzxd3XoCSn0sUkN7T4nDu1`,
     synopsis: `오랜 친구 사이로 지내온 하린과 나연. 하린은 친구인 나연을 십여 년간 짝사랑해왔지만, 차마 고백하지는 못한다.\n\n그렇게 체념하며 살아가다 결혼 적령기를 맞은 나연의 결혼 선언으로 하린은 선택의 기로에 선다.`,
     keywords: `#현대물 #학원물 #캠퍼스물 #GL/백합 #고등학생 #대학생 #전학생 #사회인 #전문직\n#헤테로 #헤녀 #순정녀 #다정녀 #직진녀 #쾌활발랄녀 #댕댕녀 #상처녀 #애교녀 #짝사랑녀 #동갑내기\n#짝사랑 #삽질 #성장 #힐링 #현실연애 #동갑커플 #친구>연인 #달달물 #해피엔딩`,
-    links: { aladin:"http://aladin.kr/p/PS4Zy", ridi:"https://t.co/h2NeCr6drn", series:"https://m.series.naver.com/novel/detail.series?productNo=13967810", kakao:"", kyobo:"https://t.co/HPh3HSHM97", yes24:"https://t.co/ZiF66SXGfN", bomtoon:"", bookcube:"https://t.co/v6SXHDjS8i", joara:"" } },
+    links: { aladin:"http://aladin.kr/p/PS4Zy", ridi:"https://t.co/h2NeCr6drn", series:"https://m.series.naver.com/novel/detail.series?productNo=13967810", kakao:"", kyobo:"https://t.co/HPh3HSHM97", yes24:"https://t.co/ZiF66SXGfN", bomtoon:"https://www.bomtoon.com/detail/db_49", bookcube:"https://t.co/v6SXHDjS8i", joara:"" } },
 
   { title: "시한부 공녀님의 마지막 여행",
     slug: "sihanbu-gongnyeonim-majimak-yeohaeng",
@@ -67,7 +67,7 @@ const worksData = [
     poster: `https://drive.google.com/thumbnail?id=1XMZzlLelebd4ubjqOAf3qVnZszcn0RZi&sz=s4000`,
     synopsis: `대학생 이윤송은 옆집 언니였고, 지금은 동거인 중인 권세민을 무려 9년째 짝사랑 중이다.\n어느 날, 세민 본인도 모르는 변화를 눈치챈 윤송은 짝사랑을 끝내기 위한 계획을 세운다. 바로 세민을 꼬실 계획.`,
     keywords: `#GL/백합 #현대물 #로맨틱코미디 #대학생 #직장인 #사회인 #이웃사촌 #연하공 #잔망공 #계략공 #연상수 #순진수 #달달 #해피엔딩 #힐링물`,
-    links: { aladin:"http://aladin.kr/p/pE6hu", ridi:"https://ridibooks.com/books/4614000139", series:"https://m.series.naver.com/novel/detail.series?productNo=13449128", kakao:"", kyobo:"https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012242741", yes24:"https://m.yes24.com/goods/detail/167572812", bomtoon:"", bookcube:"https://www.bookcube.com/book/m/detail.asp?series_num=925055437", joara:"" } },
+    links: { aladin:"http://aladin.kr/p/pE6hu", ridi:"https://ridibooks.com/books/4614000139", series:"https://m.series.naver.com/novel/detail.series?productNo=13449128", kakao:"", kyobo:"https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012242741", yes24:"https://m.yes24.com/goods/detail/167572812", bomtoon:"https://www.bomtoon.com/detail/db_47", bookcube:"https://www.bookcube.com/book/m/detail.asp?series_num=925055437", joara:"" } },
 
   { title: "오류 해결을 바라신다면",
     slug: "oryu-haegyeol-barasin-damyeon",
